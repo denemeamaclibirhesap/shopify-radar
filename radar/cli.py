@@ -3,6 +3,7 @@ import argparse
 import asyncio
 import datetime as dt
 import json
+import time
 from pathlib import Path
 
 import httpx
@@ -11,6 +12,7 @@ from . import collect as C
 from . import detect, sources, trends
 from .db import connect
 
+CHUNK = 5000  # her turdan sonra kaydedilir, süre dolarsa o ana kadarki iş kaybolmaz
 UA = "ShopifyRadar/0.1 (herkese acik veri arastirmasi)"
 
 
@@ -23,39 +25,77 @@ def new_client() -> httpx.AsyncClient:
                              limits=httpx.Limits(max_connections=60))
 
 
+def majestic_due(conn, force: bool) -> bool:
+    """Büyük liste haftada bir indirilir (adaylar zaten kayıtlı olduğundan her gün gerekmez)."""
+    if force:
+        return True
+    row = conn.execute("SELECT value FROM meta WHERE key='majestic_last'").fetchone()
+    return not row or (dt.date.today() - dt.date.fromisoformat(row[0])).days >= 7
+
+
+async def gather_domains(conn, client, args) -> list[str]:
+    """Tüm kaynaklardan alan adı topla; bir kaynak çökerse diğerleri devam eder."""
+    if args.file:
+        return sources.read_file(args.file)
+    domains: list[str] = []
+    day = dt.date.today() - dt.timedelta(days=1)
+    try:
+        domains += await sources.fetch_whoisds(client, day)
+    except Exception as e:  # noqa: BLE001 - kaynak çökse de tarama sürmeli
+        print(f"WhoisDS atlandı: {type(e).__name__}")
+    if not args.no_majestic and majestic_due(conn, args.force_majestic):
+        try:
+            tr = await sources.fetch_majestic_tr(client)
+            print(f"Majestic: {len(tr)} .tr alan adı")
+            domains += tr
+            conn.execute("INSERT OR REPLACE INTO meta VALUES ('majestic_last', ?)", (today(),))
+            conn.commit()
+        except Exception as e:  # noqa: BLE001
+            print(f"Majestic atlandı: {type(e).__name__}")
+    if args.crtsh:  # crt.sh şu an sık sık 502 veriyor: varsayılan kapalı
+        try:
+            domains += await sources.fetch_crtsh(client)
+        except Exception as e:  # noqa: BLE001
+            print(f"crt.sh atlandı: {type(e).__name__}")
+    return list(dict.fromkeys(domains))
+
+
 async def cmd_discover(conn, args):
     async with new_client() as client:
-        if args.file:
-            domains = sources.read_file(args.file)
-        else:
-            day = dt.date.today() - dt.timedelta(days=1)
-            domains = await sources.fetch_whoisds(client, day)
+        domains = await gather_domains(conn, client, args)
         known = {r[0] for r in conn.execute("SELECT domain FROM candidates")}
         todo = [d for d in sources.prioritize(domains) if d not in known][: args.limit]
-        print(f"{len(domains)} domain okundu, {len(todo)} tanesi taranacak")
-        results = await detect.check_domains(client, todo)
-    now = today()
-    found = 0
-    for d, is_shop in results.items():
-        conn.execute("INSERT OR REPLACE INTO candidates VALUES (?,?,?)", (d, now, int(is_shop)))
-        if is_shop:
-            found += 1
-            conn.execute("INSERT OR IGNORE INTO stores(domain, first_seen, is_tr) VALUES (?,?,?)",
-                         (d, now, int(d.endswith(".tr"))))
-    conn.commit()
+        n_tr = sum(d.endswith(".tr") for d in todo)
+        print(f"{len(domains)} domain okundu, {len(todo)} tanesi taranacak ({n_tr} tanesi .tr)")
+        now, found, done, start = today(), 0, 0, time.monotonic()
+        for i in range(0, len(todo), CHUNK):
+            if time.monotonic() - start > args.time_budget:
+                print(f"süre doldu: {done}/{len(todo)} taranabildi, kalanı sonraki taramaya")
+                break
+            results = await detect.check_domains(client, todo[i:i + CHUNK])
+            for d, is_shop in results.items():
+                conn.execute("INSERT OR REPLACE INTO candidates VALUES (?,?,?)", (d, now, int(is_shop)))
+                if is_shop:
+                    found += 1
+                    conn.execute("INSERT OR IGNORE INTO stores(domain, first_seen, is_tr) VALUES (?,?,?)",
+                                 (d, now, int(d.endswith(".tr"))))
+            conn.commit()
+            done += len(results)
     print(f"{found} yeni Shopify mağazası bulundu")
 
 
 async def collect_store(client, conn, domain, sem, max_images):
     async with sem:
         now = today()
-        currency = await C.detect_currency(client, domain)
+        home = await C.fetch_home(client, domain)
+        currency = C.parse_currency(home)
         products = await C.fetch_products(client, domain)
         if not products:
             conn.execute("UPDATE stores SET last_checked=? WHERE domain=?", (now, domain))
             return 0
         best = await C.fetch_bestsellers(client, domain)
-        is_tr = int(currency == "TRY" or domain.endswith(".tr"))
+        is_tr = int(currency == "TRY" or domain.endswith(".tr")
+                    or C.looks_turkish(home, [p.get("title") for p in products]))
         conn.execute("UPDATE stores SET last_checked=?, currency=?, is_tr=?, product_count=? "
                      "WHERE domain=?", (now, currency, is_tr, len(products), domain))
         have_hash = {r["pid"] for r in conn.execute(
@@ -130,16 +170,24 @@ def main():
     sub = ap.add_subparsers(dest="cmd", required=True)
     d = sub.add_parser("discover")
     d.add_argument("--file")
-    d.add_argument("--limit", type=int, default=20000)
+    d.add_argument("--limit", type=int, default=150000)
+    d.add_argument("--time-budget", type=int, default=700, help="keşif için saniye")
+    d.add_argument("--crtsh", action="store_true", help="crt.sh kaynağını da dene")
+    d.add_argument("--no-majestic", action="store_true")
+    d.add_argument("--force-majestic", action="store_true")
     c = sub.add_parser("collect")
-    c.add_argument("--max-stores", type=int, default=300)
+    c.add_argument("--max-stores", type=int, default=600)
     c.add_argument("--max-images", type=int, default=40)
     r = sub.add_parser("report")
     r.add_argument("--out", default="docs")
     run = sub.add_parser("run")
     run.add_argument("--file")
-    run.add_argument("--limit", type=int, default=20000)
-    run.add_argument("--max-stores", type=int, default=300)
+    run.add_argument("--limit", type=int, default=150000)
+    run.add_argument("--time-budget", type=int, default=700, help="keşif için saniye")
+    run.add_argument("--crtsh", action="store_true", help="crt.sh kaynağını da dene")
+    run.add_argument("--no-majestic", action="store_true")
+    run.add_argument("--force-majestic", action="store_true")
+    run.add_argument("--max-stores", type=int, default=600)
     run.add_argument("--max-images", type=int, default=40)
     run.add_argument("--out", default="docs")
     args = ap.parse_args()

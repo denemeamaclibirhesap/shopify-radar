@@ -41,7 +41,7 @@ async def verify_shopify(client: httpx.AsyncClient, domain: str) -> bool:
         return False
 
 
-async def check_domains(client, domains, dns_concurrency=200, http_concurrency=20):
+async def check_domains(client, domains, dns_concurrency=300, http_concurrency=20):
     """Dönüş: {domain: True/False}. True = doğrulanmış Shopify mağazası."""
     resolver = make_resolver()
     dns_sem = asyncio.Semaphore(dns_concurrency)

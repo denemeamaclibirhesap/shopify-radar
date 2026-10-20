@@ -9,6 +9,7 @@ import asyncio
 import base64
 import datetime as dt
 import io
+import json
 import re
 import time
 import zipfile
@@ -138,6 +139,66 @@ async def fetch_crtsh(client: httpx.AsyncClient, patterns=CRT_PATTERNS, days: in
     domains = parse_domains("\n".join(dict.fromkeys(found)))
     print(f"crt.sh: {ok} sorgu başarılı, {failed} başarısız, {len(domains)} .tr alan adı")
     return domains
+
+
+CC_COLLINFO = "https://index.commoncrawl.org/collinfo.json"
+
+
+async def fetch_commoncrawl_tr(client: httpx.AsyncClient, cursor: dict | None, pages: int = 20,
+                               suffix: str = "com.tr", delay: float = 1.0) -> tuple[list[str], dict]:
+    """Common Crawl dizininden `suffix` altındaki sitelerin alan adları (ücretsiz, nonprofit arşiv).
+
+    Dizin SURT sırasıyla sayfalanır; her çalışmada `pages` sayfa okunur ve kalınan yer `cursor`
+    olarak döner (yeni dizin çıkarsa baştan başlar). Sayfa hata verirse orada durulur, sonraki
+    çalışmada aynı sayfadan devam edilir. Dönüş: (alan adları, yeni cursor).
+    """
+    from urllib.parse import urlsplit
+    cursor = cursor or {}
+    out: list[str] = []
+    try:
+        r = await client.get(CC_COLLINFO, timeout=30)
+        r.raise_for_status()
+        index_id = r.json()[0]["id"]
+        api = f"https://index.commoncrawl.org/{index_id}-index"
+        r = await client.get(api, timeout=60, params={"url": suffix, "matchType": "domain",
+                                                      "showNumPages": "true", "output": "json"})
+        r.raise_for_status()
+        total = int(r.json()["pages"])
+    except (httpx.HTTPError, ValueError, KeyError, IndexError) as e:
+        print(f"Common Crawl atlandı: {type(e).__name__}")
+        return [], cursor
+    page = cursor.get("page", 0) if cursor.get("index") == index_id and cursor.get("suffix") == suffix else 0
+    if page >= total:
+        page = 0
+    start_page, read = page, 0
+    while read < pages and page < total:
+        text = None
+        for attempt in range(2):
+            try:
+                r = await client.get(api, timeout=90, params={"url": suffix, "matchType": "domain",
+                                                              "output": "json", "fl": "url", "page": page})
+                r.raise_for_status()
+                text = r.text
+                break
+            except httpx.HTTPError:
+                await asyncio.sleep(delay * 3)
+        if text is None:
+            print(f"Common Crawl sayfa {page} okunamadı, sonraki taramada denenecek")
+            break
+        hosts = set()
+        for line in text.splitlines():
+            try:
+                host = urlsplit(json.loads(line)["url"]).hostname
+            except (ValueError, KeyError, TypeError):
+                continue
+            if host and host.endswith(".tr"):
+                hosts.add(registrable_tr(host))
+        out += hosts
+        page += 1
+        read += 1
+        await asyncio.sleep(delay)
+    print(f"Common Crawl: sayfa {start_page}-{page - 1}/{total}, {len(set(out))} {suffix} alan adı")
+    return parse_domains("\n".join(dict.fromkeys(out))), {"index": index_id, "suffix": suffix, "page": page}
 
 
 def prioritize(domains: list[str]) -> list[str]:

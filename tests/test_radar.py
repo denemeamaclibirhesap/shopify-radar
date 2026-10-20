@@ -246,7 +246,7 @@ def test_discover_records_upcoming_and_backfills(monkeypatch, tmp_path):
         return {d: ("upcoming" if d == "eski.com.tr" else "open" if d == "yeni.com" else None) for d in domains}
     monkeypatch.setattr(cli.detect, "check_domains", fake_check)
     f = tmp_path / "d.txt"; f.write_text("yeni.com\n")
-    args = SimpleNamespace(file=str(f), limit=100, time_budget=60, no_majestic=True, force_majestic=False, crtsh=False)
+    args = SimpleNamespace(file=str(f), limit=100, time_budget=60, no_majestic=True, force_majestic=False, crtsh=False, no_cc=True, cc_pages=1)
     run(cli.cmd_discover(conn, args))
     assert conn.execute("SELECT status FROM stores WHERE domain='yeni.com'").fetchone()[0] == "open"
     assert conn.execute("SELECT COUNT(*) FROM stores WHERE domain='eski.com.tr'").fetchone()[0] == 0  # --file: geri tarama yok
@@ -260,3 +260,26 @@ def test_discover_records_upcoming_and_backfills(monkeypatch, tmp_path):
 
 async def _async(v):
     return v
+
+
+def test_fetch_commoncrawl_tr_pages_and_cursor():
+    import json as _json
+
+    def handler(req):
+        if req.url.path.endswith("collinfo.json"):
+            return httpx.Response(200, json=[{"id": "CC-MAIN-2026-39"}])
+        if req.url.params.get("showNumPages"):
+            return httpx.Response(200, json={"pages": 3})
+        page = int(req.url.params["page"])
+        rows = {0: ["https://www.butik.com.tr/a", "https://butik.com.tr/b", "https://shop.deneme.com.tr/"],
+                1: ["https://moda.com.tr/x"], 2: ["https://yok.example.com/x"]}[page]
+        return httpx.Response(200, text="\n".join(_json.dumps({"url": u}) for u in rows))
+
+    async def go(cursor, pages):
+        async with client_for(handler) as c:
+            return await sources.fetch_commoncrawl_tr(c, cursor, pages=pages, delay=0)
+    domains, cur = run(go(None, 1))
+    assert domains == ["butik.com.tr", "deneme.com.tr"] or set(domains) == {"butik.com.tr", "deneme.com.tr"}
+    assert cur["page"] == 1
+    domains, cur = run(go(cur, 5))           # kalınan yerden devam, dizin sonunda durur
+    assert domains == ["moda.com.tr"] and cur["page"] == 3

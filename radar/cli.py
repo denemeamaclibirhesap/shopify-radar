@@ -53,6 +53,16 @@ async def gather_domains(conn, client, args) -> list[str]:
             conn.commit()
         except Exception as e:  # noqa: BLE001
             print(f"Majestic atlandı: {type(e).__name__}")
+    if not args.no_cc:
+        try:
+            row = conn.execute("SELECT value FROM meta WHERE key='cc_cursor'").fetchone()
+            cc, cursor = await sources.fetch_commoncrawl_tr(client, json.loads(row[0]) if row else None,
+                                                            pages=args.cc_pages)
+            domains += cc
+            conn.execute("INSERT OR REPLACE INTO meta VALUES ('cc_cursor', ?)", (json.dumps(cursor),))
+            conn.commit()
+        except Exception as e:  # noqa: BLE001
+            print(f"Common Crawl atlandı: {type(e).__name__}")
     if args.crtsh:  # crt.sh şu an sık sık 502 veriyor: varsayılan kapalı
         try:
             domains += await sources.fetch_crtsh(client)
@@ -182,6 +192,8 @@ def main():
     d.add_argument("--time-budget", type=int, default=700, help="keşif için saniye")
     d.add_argument("--crtsh", action="store_true", help="crt.sh kaynağını da dene")
     d.add_argument("--no-majestic", action="store_true")
+    d.add_argument("--no-cc", action="store_true", help="Common Crawl kaynağını atla")
+    d.add_argument("--cc-pages", type=int, default=20, help="her taramada okunacak Common Crawl sayfası")
     d.add_argument("--force-majestic", action="store_true")
     c = sub.add_parser("collect")
     c.add_argument("--max-stores", type=int, default=600)
@@ -194,6 +206,8 @@ def main():
     run.add_argument("--time-budget", type=int, default=700, help="keşif için saniye")
     run.add_argument("--crtsh", action="store_true", help="crt.sh kaynağını da dene")
     run.add_argument("--no-majestic", action="store_true")
+    run.add_argument("--no-cc", action="store_true", help="Common Crawl kaynağını atla")
+    run.add_argument("--cc-pages", type=int, default=20, help="her taramada okunacak Common Crawl sayfası")
     run.add_argument("--force-majestic", action="store_true")
     run.add_argument("--max-stores", type=int, default=600)
     run.add_argument("--max-images", type=int, default=40)

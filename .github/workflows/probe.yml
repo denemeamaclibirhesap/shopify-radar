@@ -1,0 +1,20 @@
+name: probe
+on:
+  push:
+    paths: ['.github/workflows/probe.yml']
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - run: |
+          probe() { echo "== $1"; curl -sS -m 90 -A "ShopifyRadar/0.1 (herkese acik veri arastirmasi)" -o /tmp/o -w "status=%{http_code} size=%{size_download} time=%{time_total}\n" "$1" || echo "curl failed"; head -c 600 /tmp/o | tr '\n' ' '; echo; }
+          probe 'https://index.commoncrawl.org/collinfo.json'
+          IDX=$(curl -s -m 30 https://index.commoncrawl.org/collinfo.json | python3 -c "import sys,json;print(json.load(sys.stdin)[0]['id'])")
+          echo "son indeks: $IDX"
+          probe "https://index.commoncrawl.org/$IDX-index?url=*.com.tr&matchType=domain&filter=~url:.*/products/.*&fl=url&output=json&limit=30"
+          probe "https://index.commoncrawl.org/$IDX-index?url=*.tr&matchType=domain&filter=~url:.*/collections/.*&fl=url&output=json&limit=30"
+          probe "https://index.commoncrawl.org/$IDX-index?url=*.com.tr&matchType=domain&showNumPages=true&output=json"
+          probe 'https://web.archive.org/cdx/search/cdx?url=*.com.tr&matchType=domain&filter=original:.*/collections/.*&fl=original&collapse=urlkey&limit=20'
+          echo "== şifreli mağaza örneği (Shopify şifre sayfası):"
+          curl -sS -m 30 -L -o /dev/null -w "final=%{url_effective} status=%{http_code}\n" https://checkout.shopify.com/ || true

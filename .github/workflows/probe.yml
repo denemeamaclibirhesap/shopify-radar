@@ -1,0 +1,15 @@
+name: probe
+on: workflow_dispatch
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - run: |
+          probe() { echo "== $1"; curl -sS -m 60 -A "ShopifyRadar/0.1 (herkese acik veri arastirmasi)" -o /tmp/o -w "status=%{http_code} size=%{size_download}\n" "$1" || echo "curl failed"; head -c 300 /tmp/o | tr '\n' ' '; echo; }
+          probe 'https://crt.sh/?q=%25butik%25.com.tr&output=json&exclude=expired'
+          probe 'https://crt.sh/?q=example.com&output=json'
+          probe 'https://api.certspotter.com/v1/issuances?domain=butik.com.tr&include_subdomains=true&expand=dns_names'
+          probe 'https://tranco-list.eu/top-1m.csv.zip'
+          probe 'https://downloads.majestic.com/majestic_million.csv'
+          probe 'https://s3-us-west-1.amazonaws.com/umbrella-static/top-1m.csv.zip'

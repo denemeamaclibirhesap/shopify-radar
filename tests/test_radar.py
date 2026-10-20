@@ -242,7 +242,7 @@ def test_discover_records_upcoming_and_backfills(monkeypatch, tmp_path):
     conn.execute("INSERT INTO candidates(domain, seen, is_shopify) VALUES ('eski.com.tr', '2026-10-01', 0)")
 
     async def fake_check(client, domains, stats=None, **kw):
-        stats["dns"] = len(domains)
+        stats["shopify"] = len(domains)
         return {d: ("upcoming" if d == "eski.com.tr" else "open" if d == "yeni.com" else None) for d in domains}
     monkeypatch.setattr(cli.detect, "check_domains", fake_check)
     f = tmp_path / "d.txt"; f.write_text("yeni.com\n")
@@ -283,3 +283,22 @@ def test_fetch_commoncrawl_tr_pages_and_cursor():
     assert cur["page"] == 1
     domains, cur = run(go(cur, 5))           # kalınan yerden devam, dizin sonunda durur
     assert domains == ["moda.com.tr"] and cur["page"] == 3
+
+
+def test_dns_class_shopify_cloudflare_none():
+    class Rd:
+        def __init__(self, a): self.address = a
+
+    class Ans(list):
+        canonical_name = "x.example."
+
+    class FakeResolver:
+        async def resolve(self, name, kind):
+            table = {"s.example": "23.227.38.65", "cf.example": "104.21.5.5", "www.cf2.example": "172.67.1.1",
+                     "other.example": "93.184.216.34"}
+            if name in table:
+                return Ans([Rd(table[name])])
+            raise OSError("nxdomain")
+    r = FakeResolver()
+    got = [run(detect.dns_class(d, r)) for d in ("s.example", "cf.example", "cf2.example", "other.example", "yok.example")]
+    assert got == ["shopify", "cloudflare", "cloudflare", None, None]

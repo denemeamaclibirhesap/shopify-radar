@@ -1,5 +1,6 @@
 """Shopify tespiti: önce ucuz DNS filtresi, sonra HTTP doğrulaması."""
 import asyncio
+import ipaddress
 
 import dns.asyncresolver
 import dns.exception
@@ -15,18 +16,41 @@ def make_resolver() -> dns.asyncresolver.Resolver:
     return r
 
 
-async def dns_looks_shopify(domain: str, resolver=None) -> bool:
+# Cloudflare arkasındaki mağazaların DNS kaydı Shopify'ı göstermez; bunlar da HTTP ile denenir.
+CLOUDFLARE_NETS = [ipaddress.ip_network(n) for n in (
+    "173.245.48.0/20", "103.21.244.0/22", "103.22.200.0/22", "103.31.4.0/22", "141.101.64.0/18",
+    "108.162.192.0/18", "190.93.240.0/20", "188.114.96.0/20", "197.234.240.0/22", "198.41.128.0/17",
+    "162.158.0.0/15", "104.16.0.0/13", "104.24.0.0/14", "172.64.0.0/13", "131.0.72.0/22")]
+
+
+def _is_cloudflare(addr: str) -> bool:
+    try:
+        ip = ipaddress.ip_address(addr)
+    except ValueError:
+        return False
+    return any(ip in n for n in CLOUDFLARE_NETS)
+
+
+async def dns_class(domain: str, resolver=None) -> str | None:
+    """'shopify' (Shopify IP/CNAME), 'cloudflare' (Cloudflare arkasında, HTTP ile bakılmalı) ya da None."""
     resolver = resolver or make_resolver()
+    found = None
     for name in (domain, f"www.{domain}"):
         try:
             ans = await resolver.resolve(name, "A")
         except (dns.exception.DNSException, OSError):
             continue
         if str(ans.canonical_name).rstrip(".").endswith("myshopify.com"):
-            return True
+            return "shopify"
         if any(rd.address.startswith(SHOPIFY_IP_PREFIX) for rd in ans):
-            return True
-    return False
+            return "shopify"
+        if any(_is_cloudflare(rd.address) for rd in ans):
+            found = "cloudflare"
+    return found
+
+
+async def dns_looks_shopify(domain: str, resolver=None) -> bool:
+    return await dns_class(domain, resolver) == "shopify"
 
 
 async def verify_shopify(client: httpx.AsyncClient, domain: str) -> bool:
@@ -68,8 +92,8 @@ async def shopify_status(client: httpx.AsyncClient, domain: str) -> str | None:
     return None
 
 
-async def check_domains(client, domains, dns_concurrency=300, http_concurrency=20, stats=None):
-    """Dönüş: {domain: 'open' | 'upcoming' | None}. `stats['dns']` DNS'te Shopify görünenleri sayar."""
+async def check_domains(client, domains, dns_concurrency=300, http_concurrency=40, stats=None):
+    """Dönüş: {domain: 'open' | 'upcoming' | None}. `stats` DNS'te 'shopify' ve 'cloudflare' görünenleri sayar."""
     resolver = make_resolver()
     dns_sem = asyncio.Semaphore(dns_concurrency)
     http_sem = asyncio.Semaphore(http_concurrency)
@@ -78,11 +102,11 @@ async def check_domains(client, domains, dns_concurrency=300, http_concurrency=2
 
     async def one(d: str):
         async with dns_sem:
-            ok = await dns_looks_shopify(d, resolver)
-        if not ok:
+            kind = await dns_class(d, resolver)
+        if not kind:
             results[d] = None
             return
-        stats["dns"] = stats.get("dns", 0) + 1
+        stats[kind] = stats.get(kind, 0) + 1
         async with http_sem:
             results[d] = await shopify_status(client, d)
 

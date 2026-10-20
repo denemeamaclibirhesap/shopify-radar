@@ -27,7 +27,7 @@ def new_client() -> httpx.AsyncClient:
 
 def majestic_due(conn, force: bool) -> bool:
     """Büyük liste haftada bir indirilir (adaylar zaten kayıtlı olduğundan her gün gerekmez)."""
-    if force:
+    if force or conn.execute("SELECT 1 FROM established LIMIT 1").fetchone() is None:
         return True
     row = conn.execute("SELECT value FROM meta WHERE key='majestic_last'").fetchone()
     return not row or (dt.date.today() - dt.date.fromisoformat(row[0])).days >= 7
@@ -48,6 +48,7 @@ async def gather_domains(conn, client, args) -> list[str]:
             tr = await sources.fetch_majestic_tr(client)
             print(f"Majestic: {len(tr)} .tr alan adı")
             domains += tr
+            conn.executemany("INSERT OR IGNORE INTO established VALUES (?)", [(d,) for d in tr])
             conn.execute("INSERT OR REPLACE INTO meta VALUES ('majestic_last', ?)", (today(),))
             conn.commit()
         except Exception as e:  # noqa: BLE001

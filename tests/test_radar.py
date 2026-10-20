@@ -196,7 +196,19 @@ def test_majestic_due_weekly():
     import datetime as dt
     from radar import cli
     conn = connect(":memory:")
-    assert cli.majestic_due(conn, False)
+    assert cli.majestic_due(conn, False)  # established tablosu boşken liste indirilir
+    conn.execute("INSERT INTO established VALUES ('a.com.tr')")
+    conn.execute("DELETE FROM meta")
     conn.execute("INSERT INTO meta VALUES ('majestic_last', ?)", (dt.date.today().isoformat(),))
     assert not cli.majestic_due(conn, False)
     assert cli.majestic_due(conn, True)
+
+
+def test_known_brand_detection():
+    from radar import brands
+    for d in ("nike.com", "nike.com.tr", "adidas.com.tr", "dagi.com.tr", "derimod.com.tr", "reebok.co.uk",
+              "new-balance.com"):
+        assert brands.is_known_brand(d), d
+    for d in ("nike-outlet.shop", "benimbutigim.com", "yenimagaza.com.tr", "sneakers.nike-fan.com"):
+        assert not brands.is_known_brand(d), d
+    assert brands.is_known_brand("kucukdukkan.com", {"kucukdukkan.com"})

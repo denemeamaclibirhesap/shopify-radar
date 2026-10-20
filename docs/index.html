@@ -99,6 +99,12 @@
   }
   .chip[aria-pressed="true"] { background: var(--tr); border-color: var(--tr); color: var(--tr-ink); }
 
+  .tabs { display: inline-flex; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 3px; gap: 2px; }
+  .tab { border: 0; background: transparent; color: var(--muted); font: inherit; font-size: 15px; font-weight: 600; padding: 8px 14px; border-radius: 9px; cursor: pointer; white-space: nowrap; }
+  .tab[aria-selected="true"] { background: var(--text); color: var(--bg); }
+  .tab span { opacity: .65; font-weight: 500; margin-left: 4px; font-variant-numeric: tabular-nums; }
+  .badge.brand { background: var(--surface-2); color: var(--text); border: 1px solid var(--line); }
+
   /* Bölümler */
   section { padding: 56px 0 8px; }
   .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
@@ -108,6 +114,7 @@
 
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 14px; }
   .card {
+    position: relative;
     background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
     padding: 14px; display: flex; flex-direction: column; gap: 12px; min-width: 0; box-shadow: var(--shadow);
     transition: border-color .15s, transform .15s;
@@ -117,6 +124,8 @@
   .card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
   .domain { font-weight: 700; font-size: 16px; letter-spacing: -.01em; text-decoration: none; overflow-wrap: anywhere; }
   .domain:hover { text-decoration: underline; }
+  .stretch::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius); }   /* kartın her yeri tıklanır */
+  .card a.mini { position: relative; z-index: 1; }
   .meta { color: var(--muted); font-size: 13px; display: flex; flex-wrap: wrap; gap: 4px 12px; }
   .badge { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; padding: 4px 8px; border-radius: 999px; white-space: nowrap; }
   .badge.tr { background: var(--tr); color: var(--tr-ink); }
@@ -125,7 +134,7 @@
   .thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
   .thumb { aspect-ratio: 1; border-radius: 10px; background: var(--surface-2); overflow: hidden; }
   .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .visit { margin-top: auto; font-size: 14px; font-weight: 600; text-decoration: none; color: var(--accent); }
+  .visit { margin-top: auto; align-self: flex-start; font-size: 14px; font-weight: 600; text-decoration: none; color: var(--accent); }
   .visit:hover { text-decoration: underline; }
 
   .pcard { padding: 0; overflow: hidden; }
@@ -166,7 +175,10 @@
     .hero { padding-top: 20px; }
     section { padding-top: 44px; }
     .grid { grid-template-columns: 1fr; }
+    .search { flex-basis: 100%; }
     .select, .chip { flex: 1; justify-content: center; }
+    .tabs { width: 100%; }
+    .tab { flex: 1; padding: 9px 8px; }
   }
   @media (prefers-reduced-motion: reduce) { .dot { animation: none; } .card { transition: none; } .card:hover { transform: none; } }
 </style>
@@ -197,6 +209,10 @@
 
 <div class="toolbar-wrap">
   <div class="wrap toolbar" role="search">
+    <div class="tabs" role="tablist" aria-label="Mağaza türü">
+      <button class="tab" id="tab-new" role="tab" type="button" aria-selected="true">Yeni mağazalar<span id="n-new"></span></button>
+      <button class="tab" id="tab-brand" role="tab" type="button" aria-selected="false">Bilinen markalar<span id="n-brand"></span></button>
+    </div>
     <label class="search"><span class="sr" hidden>Ara</span>
       <input id="q" type="search" placeholder="Mağaza veya ürün ara…" autocomplete="off" aria-label="Mağaza veya ürün ara">
     </label>
@@ -212,7 +228,7 @@
 <main class="wrap">
   <section id="s-stores">
     <div class="sec-head">
-      <div><h2>Yeni keşfedilen mağazalar</h2><div class="sec-sub">Radarın en son bulduğu mağazalar. Türkiye odaklı olanlar kırmızı rozetle işaretlenir.</div></div>
+      <div><h2 id="h-stores">Yeni keşfedilen mağazalar</h2><div class="sec-sub" id="sub-stores">Radarın en son bulduğu mağazalar. Türkiye odaklı olanlar kırmızı rozetle işaretlenir. Karta tıklayınca mağaza yeni sekmede açılır.</div></div>
       <div class="count" id="c-stores"></div>
     </div>
     <div class="grid" id="stores"></div>
@@ -254,8 +270,14 @@
   };
   var nf = new Intl.NumberFormat("tr-TR");
   var PAGE = 24;
-  var state = { q: "", trOnly: false, sort: "new", shown: { stores: PAGE, cross: PAGE, movers: PAGE } };
-  var data = null;
+  var state = { q: "", trOnly: false, sort: "new", tab: "new", shown: { stores: PAGE, cross: PAGE, movers: PAGE } };
+  var data = null, brandSet = {};
+  var TEXT = {
+    new: ["Yeni keşfedilen mağazalar", "Radarın en son bulduğu bağımsız mağazalar. Türkiye odaklı olanlar kırmızı rozetle işaretlenir. Karta tıklayınca mağaza yeni sekmede açılır."],
+    brand: ["Bilinen markalar", "Zaten tanınan markaların Shopify mağazaları. Yeni ve bağımsız mağazalardan ayrı tutulur. Karta tıklayınca mağaza yeni sekmede açılır."]
+  };
+  function isBrand(domain) { return !!brandSet[domain]; }
+  function inTab(isB) { return state.tab === "brand" ? isB : !isB; }
 
   // ---- Tema ----
   var root = document.documentElement, btn = $("#themeBtn");
@@ -314,6 +336,9 @@
     });
     $("#moversHint").textContent = s.compare_ready ? "" : "ikinci taramadan sonra";
     $("#note").textContent = data.note || "";
+    var nb = s.brands || 0;
+    $("#n-new").textContent = nf.format(Math.max(0, (s.stores || 0) - nb));
+    $("#n-brand").textContent = nf.format(nb);
     tickUpdated();
   }
   function tickUpdated() {
@@ -348,19 +373,19 @@
     var items = data.new_stores.map(function (s, i) {
       return { s: s, name: s.domain, pop: s.product_count || 0, order: seenDate(s.first_seen) * 1000 + (data.new_stores.length - i) };
     }).filter(function (x) {
-      return (!state.trOnly || x.s.is_tr) && matches(x.s.domain);
+      return inTab(isBrand(x.s.domain)) && (!state.trOnly || x.s.is_tr) && matches(x.s.domain);
     }).sort(sorter());
     section("stores", items, function (x) {
       var s = x.s, tr = s.is_tr;
       return '<article class="card' + (tr ? " is-tr" : "") + '">' +
-        '<div class="card-head"><a class="domain" target="_blank" rel="noopener noreferrer" href="' + esc(storeUrl(s.domain)) + '">' + esc(s.domain) + "</a>" +
-        (tr ? '<span class="badge tr">Türkiye</span>' : "") + "</div>" +
+        '<div class="card-head"><a class="domain stretch" target="_blank" rel="noopener noreferrer" href="' + esc(storeUrl(s.domain)) + '">' + esc(s.domain) + "</a>" +
+        (tr ? '<span class="badge tr">Türkiye</span>' : (s.is_brand ? '<span class="badge brand">Marka</span>' : "")) + "</div>" +
         '<div class="meta"><span>' + esc(seenLabel(s.first_seen)) + "</span><span>" + nf.format(s.product_count || 0) + " ürün</span>" +
         (s.currency ? "<span>" + esc(s.currency) + "</span>" : "") + "</div>" +
         '<div class="thumbs">' + [0, 1, 2].map(function (i) {
           return '<div class="thumb">' + img(s.images && s.images[i], 240, s.domain + " ürünü") + "</div>";
         }).join("") + "</div>" +
-        '<a class="visit" target="_blank" rel="noopener noreferrer" href="' + esc(storeUrl(s.domain)) + '">Mağazaya git →</a></article>';
+        '<span class="visit">Mağazaya git →</span></article>';
     }, emptyBox("Eşleşen mağaza yok", filtered() ? "Aramayı veya filtreyi değiştirmeyi dene." : "İlk tarama bittikten sonra mağazalar burada görünecek."));
   }
 
@@ -368,13 +393,13 @@
     var items = data.cross_store.map(function (g, i) {
       return { g: g, name: g.title, pop: g.stores, order: data.cross_store.length - i };
     }).filter(function (x) {
-      return (!state.trOnly || x.g.has_tr) && matches(x.g.title + " " + x.g.store_names.join(" "));
+      return inTab(!!x.g.brand_only) && (!state.trOnly || x.g.has_tr) && matches(x.g.title + " " + x.g.store_names.join(" "));
     }).sort(sorter());
     section("cross", items, function (x) {
       var g = x.g, extra = g.stores - g.store_names.length;
       return '<article class="card pcard"><div class="pimg">' + img(g.image_url, 480, g.title) +
         '<span class="badge count-b">' + g.stores + " mağazada</span>" + (g.has_tr ? '<span class="badge tr">Türkiye</span>' : "") + "</div>" +
-        '<div class="pbody"><h3 class="ptitle">' + esc(g.title) + '</h3><div class="chips">' +
+        '<div class="pbody"><h3 class="ptitle"><a class="stretch" target="_blank" rel="noopener noreferrer" href="' + esc(storeUrl(g.store_names[0])) + '">' + esc(g.title) + '</a></h3><div class="chips">' +
         g.store_names.slice(0, 4).map(function (n) { return '<a class="mini" target="_blank" rel="noopener noreferrer" href="' + esc(storeUrl(n)) + '">' + esc(n) + "</a>"; }).join("") +
         (extra > 0 ? '<span class="mini">+' + (extra + Math.max(0, g.store_names.length - 4)) + " mağaza</span>" : (g.store_names.length > 4 ? '<span class="mini">+' + (g.store_names.length - 4) + "</span>" : "")) +
         "</div></div></article>";
@@ -396,13 +421,13 @@
     var items = data.movers.map(function (m, i) {
       return { m: m, name: m.title || "", pop: m.change == null ? 0 : m.change, order: data.movers.length - i };
     }).filter(function (x) {
-      return (!state.trOnly || trSet[x.m.store]) && matches((x.m.title || "") + " " + x.m.store);
+      return inTab(isBrand(x.m.store)) && (!state.trOnly || trSet[x.m.store]) && matches((x.m.title || "") + " " + x.m.store);
     }).sort(sorter());
     section("movers", items, function (x) {
       var m = x.m, link = m.handle ? storeUrl(m.store) + "/products/" + encodeURIComponent(m.handle) : storeUrl(m.store);
       return '<article class="card pcard"><div class="pimg">' + img(m.image_url, 480, m.title) +
         '<span class="badge up">' + (m.new_entry ? "Yeni giriş" : "▲ " + m.change) + "</span>" + (trSet[m.store] ? '<span class="badge tr">Türkiye</span>' : "") + "</div>" +
-        '<div class="pbody"><h3 class="ptitle">' + esc(m.title || "Adsız ürün") + '</h3>' +
+        '<div class="pbody"><h3 class="ptitle"><a class="stretch" target="_blank" rel="noopener noreferrer" href="' + esc(link) + '">' + esc(m.title || "Adsız ürün") + '</a></h3>' +
         '<div class="rank-row"><span>Sıra #' + m.rank + (m.prev_rank ? " (önce #" + m.prev_rank + ")" : "") + '</span></div>' +
         '<div class="chips"><a class="mini" target="_blank" rel="noopener noreferrer" href="' + esc(link) + '">' + esc(m.store) + "</a></div></div></article>";
     }, emptyBox("Eşleşen ürün yok", "Aramayı veya filtreyi değiştirmeyi dene."));
@@ -422,6 +447,17 @@
     this.setAttribute("aria-pressed", String(state.trOnly));
     resetShown(); renderAll();
   });
+  function setTab(t, push) {
+    state.tab = t === "brand" ? "brand" : "new";
+    $("#tab-new").setAttribute("aria-selected", String(state.tab === "new"));
+    $("#tab-brand").setAttribute("aria-selected", String(state.tab === "brand"));
+    $("#h-stores").textContent = TEXT[state.tab][0];
+    $("#sub-stores").textContent = TEXT[state.tab][1];
+    if (push) { try { history.replaceState(null, "", state.tab === "brand" ? "#markalar" : location.pathname + location.search); } catch (e) {} }
+    resetShown(); if (data) renderAll();
+  }
+  $("#tab-new").addEventListener("click", function () { setTab("new", true); });
+  $("#tab-brand").addEventListener("click", function () { setTab("brand", true); });
   $("#sort").addEventListener("change", function (e) { state.sort = e.target.value; resetShown(); renderAll(); });
   ["Stores", "Cross", "Movers"].forEach(function (n) {
     $("#more" + n).addEventListener("click", function () { state.shown[n.toLowerCase()] += PAGE; renderAll(); });
@@ -441,7 +477,9 @@
       }
       return g;
     });
-    data = d; renderHeader(); renderAll();
+    (d.brand_domains || []).forEach(function (b) { brandSet[b] = 1; });
+    d.new_stores.forEach(function (x) { if (x.is_brand) brandSet[x.domain] = 1; });
+    data = d; renderHeader(); setTab(location.hash === "#markalar" ? "brand" : "new", false);
   }).catch(function (err) {
     if (window.console) console.error("radar:", err);
     $("#eyebrow").textContent = "Henüz veri yok";

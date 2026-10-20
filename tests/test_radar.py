@@ -212,3 +212,51 @@ def test_known_brand_detection():
     for d in ("nike-outlet.shop", "benimbutigim.com", "yenimagaza.com.tr", "sneakers.nike-fan.com"):
         assert not brands.is_known_brand(d), d
     assert brands.is_known_brand("kucukdukkan.com", {"kucukdukkan.com"})
+
+
+def test_shopify_status_open_upcoming_none():
+    def handler(req):
+        host = req.url.host
+        if host == "open.example":
+            return httpx.Response(200, json={"products": []})
+        if host == "soon.example":
+            if req.url.path == "/password":
+                return httpx.Response(200, text='<form action="/password" method="post">Opening soon</form>')
+            return httpx.Response(302, headers={"location": "https://soon.example/password"})
+        if host == "html.example":
+            return httpx.Response(200, text="<html>merhaba</html>")
+        return httpx.Response(404)
+
+    async def go():
+        async with client_for(handler) as c:
+            return [await detect.shopify_status(c, h)
+                    for h in ("open.example", "soon.example", "html.example", "none.example")]
+    assert run(go()) == ["open", "upcoming", None, None]
+
+
+def test_discover_records_upcoming_and_backfills(monkeypatch, tmp_path):
+    from types import SimpleNamespace
+    from radar import cli
+    conn = connect(":memory:")
+    # Eskiden "Shopify değil" diye işaretlenmiş (status NULL) bir aday: yeniden bakılmalı
+    conn.execute("INSERT INTO candidates(domain, seen, is_shopify) VALUES ('eski.com.tr', '2026-10-01', 0)")
+
+    async def fake_check(client, domains, stats=None, **kw):
+        stats["dns"] = len(domains)
+        return {d: ("upcoming" if d == "eski.com.tr" else "open" if d == "yeni.com" else None) for d in domains}
+    monkeypatch.setattr(cli.detect, "check_domains", fake_check)
+    f = tmp_path / "d.txt"; f.write_text("yeni.com\n")
+    args = SimpleNamespace(file=str(f), limit=100, time_budget=60, no_majestic=True, force_majestic=False, crtsh=False)
+    run(cli.cmd_discover(conn, args))
+    assert conn.execute("SELECT status FROM stores WHERE domain='yeni.com'").fetchone()[0] == "open"
+    assert conn.execute("SELECT COUNT(*) FROM stores WHERE domain='eski.com.tr'").fetchone()[0] == 0  # --file: geri tarama yok
+    args.file = None
+    monkeypatch.setattr(cli, "gather_domains", lambda *a, **k: _async([]))
+    run(cli.cmd_discover(conn, args))
+    row = conn.execute("SELECT status, is_tr FROM stores WHERE domain='eski.com.tr'").fetchone()
+    assert (row["status"], row["is_tr"]) == ("upcoming", 1)
+    assert conn.execute("SELECT status FROM candidates WHERE domain='eski.com.tr'").fetchone()[0] == "upcoming"
+
+
+async def _async(v):
+    return v

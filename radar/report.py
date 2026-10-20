@@ -4,7 +4,7 @@ import sqlite3
 
 from . import brands, trends
 
-MAX_STORES = 400       # sayfada gösterilecek en fazla mağaza (tüm Türk mağazalar dahil)
+MAX_STORES = 300       # her durum için en yeni diğer mağaza sayısı (tüm Türk mağazalar ve markalar ayrıca eklenir)
 MAX_CROSS = 60
 IMAGES_PER_STORE = 3
 
@@ -42,7 +42,7 @@ def store_images(conn: sqlite3.Connection, domain: str) -> list[str]:
 def build_report(conn: sqlite3.Connection, now: dt.datetime | None = None) -> dict:
     now = now or dt.datetime.now(dt.timezone.utc)
     stores_all = conn.execute(
-        "SELECT domain, first_seen, currency, is_tr, product_count FROM stores").fetchall()
+        "SELECT domain, first_seen, currency, is_tr, product_count, status FROM stores").fetchall()
     established = {r[0] for r in conn.execute("SELECT domain FROM established")}
     brand_domains = {r["domain"] for r in stores_all if brands.is_known_brand(r["domain"], established)}
     seen = {r["domain"]: parse_seen(r["first_seen"]) for r in stores_all}
@@ -53,15 +53,17 @@ def build_report(conn: sqlite3.Connection, now: dt.datetime | None = None) -> di
     tr_domains = {r["domain"] for r in stores_all if r["is_tr"]}
     products = conn.execute("SELECT COUNT(*) FROM products").fetchone()[0]
 
-    # Tüm Türk mağazalar + en yeni diğer mağazalar
+    # Tüm Türk mağazalar + tüm markalar + her durumdan (açık / açılmak üzere) en yeni mağazalar
     ordered = sorted(stores_all, key=lambda r: (seen[r["domain"]], r["is_tr"]), reverse=True)
-    chosen = [r for r in ordered if r["is_tr"] or r["domain"] in brand_domains]
-    chosen += [r for r in ordered if not (r["is_tr"] or r["domain"] in brand_domains)][
-        : max(0, MAX_STORES - len(chosen))]
+    must = [r for r in ordered if r["is_tr"] or r["domain"] in brand_domains]
+    chosen = list(must)
+    for status in ("open", "upcoming"):
+        rest = [r for r in ordered if r["status"] == status and not (r["is_tr"] or r["domain"] in brand_domains)]
+        chosen += rest[:MAX_STORES]
     chosen.sort(key=lambda r: (seen[r["domain"]], r["is_tr"]), reverse=True)
     new_stores = [{
         "domain": r["domain"], "first_seen": r["first_seen"], "currency": r["currency"],
-        "is_tr": int(r["is_tr"]), "is_brand": int(r["domain"] in brand_domains), "product_count": r["product_count"],
+        "is_tr": int(r["is_tr"]), "is_brand": int(r["domain"] in brand_domains), "status": r["status"], "product_count": r["product_count"],
         "images": store_images(conn, r["domain"]),
     } for r in chosen]
 
@@ -81,6 +83,12 @@ def build_report(conn: sqlite3.Connection, now: dt.datetime | None = None) -> di
         "generated": now.date().isoformat(),
         "generated_at": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
         "stats": {"stores": len(stores_all), "tr_stores": len(tr_domains), "products": products,
+                  "open": sum(1 for r in stores_all if r["status"] == "open"),
+                  "upcoming": sum(1 for r in stores_all if r["status"] == "upcoming"),
+                  "tr_open": sum(1 for r in stores_all if r["is_tr"] and r["status"] == "open"),
+                  "tr_upcoming": sum(1 for r in stores_all if r["is_tr"] and r["status"] == "upcoming"),
+                  "tab_new": sum(1 for r in stores_all if r["status"] == "open" and r["domain"] not in brand_domains),
+                  "tab_upcoming": sum(1 for r in stores_all if r["status"] == "upcoming" and r["domain"] not in brand_domains),
                   "brands": len(brand_domains), "new_24h": new_24h, "new_7d": new_7d, "movers": len(movers),
                   "compare_ready": scans >= 2},
         "brand_domains": sorted(brand_domains),

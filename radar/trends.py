@@ -4,6 +4,7 @@ from collections import defaultdict
 
 BANDS = 7        # 7 bant x 9 bit: Hamming mesafesi <= 6 ise en az bir bant birebir aynı kalır
 BAND_BITS = 9
+MAX_BUCKET = 400  # tek bir kovada karşılaştırılacak en fazla benzersiz görsel
 
 
 def hamming(a: int, b: int) -> int:
@@ -32,21 +33,29 @@ def cross_store_groups(conn: sqlite3.Connection, max_distance: int = 6, min_stor
         "SELECT store, pid, title, price, image_url, phash FROM products WHERE phash IS NOT NULL"
     ).fetchall()
     hashes = [int(r["phash"], 16) for r in rows]
+    uf = _UF(len(rows))
+    # Birebir aynı görseller tek noktada birleştirilir (yer tutucu/aynı logo yüzlerce üründe tekrarlanabilir;
+    # çiftleri tek tek karşılaştırmak kareli yavaşlamaya yol açıyordu).
+    by_hash: dict[int, int] = {}
+    for i, h in enumerate(hashes):
+        if h in by_hash:
+            uf.union(by_hash[h], i)
+        else:
+            by_hash[h] = i
+    reps = list(by_hash.items())            # (hash, ilk satır)
     buckets = defaultdict(list)
     mask = (1 << BAND_BITS) - 1
-    for i, h in enumerate(hashes):
+    for k, (h, _) in enumerate(reps):
         for b in range(BANDS):
-            buckets[(b, (h >> (b * BAND_BITS)) & mask)].append(i)
-
-    uf = _UF(len(rows))
+            buckets[(b, (h >> (b * BAND_BITS)) & mask)].append(k)
     for members in buckets.values():
-        if len(members) < 2:
-            continue
+        if len(members) < 2 or len(members) > MAX_BUCKET:
+            continue   # çok kalabalık kovalar (anlamsız ortak görseller) atlanır
         for x in range(len(members)):
             for y in range(x + 1, len(members)):
-                i, j = members[x], members[y]
-                if rows[i]["store"] != rows[j]["store"] and hamming(hashes[i], hashes[j]) <= max_distance:
-                    uf.union(i, j)
+                (hx, ix), (hy, iy) = reps[members[x]], reps[members[y]]
+                if hamming(hx, hy) <= max_distance:
+                    uf.union(ix, iy)
 
     groups = defaultdict(list)
     for i in range(len(rows)):

@@ -111,7 +111,7 @@ async def shopify_status(client: httpx.AsyncClient, domain: str, reasons=None) -
     return None
 
 
-async def check_domains(client, domains, dns_concurrency=300, http_concurrency=40, stats=None):
+async def check_domains(client, domains, dns_concurrency=300, http_concurrency=80, stats=None):
     """Dönüş: {domain: 'open' | 'upcoming' | None}. `stats` DNS'te 'shopify' ve 'cloudflare' görünenleri sayar."""
     resolver = make_resolver()
     dns_sem = asyncio.Semaphore(dns_concurrency)

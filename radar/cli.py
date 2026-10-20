@@ -11,9 +11,9 @@ import httpx
 
 from . import collect as C
 from . import detect, report, sources
-from .db import connect
+from .db import PRODUCT_CAP, connect, prune_products
 
-CHUNK = 5000  # her turdan sonra kaydedilir, süre dolarsa o ana kadarki iş kaybolmaz
+CHUNK = 2000  # her turdan sonra kaydedilir, süre dolarsa o ana kadarki iş kaybolmaz
 UA = "ShopifyRadar/0.1 (herkese acik veri arastirmasi)"
 
 
@@ -148,7 +148,10 @@ async def _collect_store(client, conn, domain, max_images):
                  "WHERE domain=?", (now, currency, is_tr, len(products), domain))
     have_hash = {r["pid"] for r in conn.execute(
         "SELECT pid FROM products WHERE store=? AND phash IS NOT NULL", (domain,))}
-    for p in products:
+    # Yalnızca çok satanlar + en yeni ürünler saklanır (tümü değil): veritabanı küçük kalsın
+    ranked = set(best)
+    keep = [p for p in products if p["id"] in ranked] + [p for p in products if p["id"] not in ranked]
+    for p in keep[:PRODUCT_CAP]:
         conn.execute(
             """INSERT INTO products(store,pid,title,handle,price,image_url,first_seen,last_seen)
                VALUES (?,?,?,?,?,?,?,?)
@@ -189,6 +192,9 @@ async def cmd_collect(conn, args):
         res = await asyncio.gather(
             *(collect_store(client, conn, r["domain"], sem, args.max_images, deadline) for r in rows))
     conn.commit()
+    removed = prune_products(conn)
+    if removed:
+        print(f"veritabanı küçültüldü: {removed} fazla ürün silindi")
     print(f"{len(rows)} mağaza sırada, {sum(res)} ürün görüldü"
           + (" (süre doldu, kalanı sonraki taramada)" if time.monotonic() > deadline else ""))
 

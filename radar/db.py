@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS meta (
     value TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_products_phash ON products(phash);
+CREATE INDEX IF NOT EXISTS idx_rankings_store_pid ON rankings(store, pid);
 """
 
 
@@ -68,3 +69,28 @@ def _migrate(conn: sqlite3.Connection) -> None:
     if "status" not in cols("stores"):
         conn.execute("ALTER TABLE stores ADD COLUMN status TEXT NOT NULL DEFAULT 'open'")
     conn.commit()
+
+
+PRODUCT_CAP = 40   # mağaza başına saklanan en fazla ürün (veritabanı repoda tutulduğu için küçük kalmalı)
+
+
+def prune_products(conn: sqlite3.Connection, cap: int = PRODUCT_CAP, vacuum: bool = True) -> int:
+    """Her mağazada sıralamada olanları + en yenileri tutar, fazlasını siler. Silinen sayıyı döner."""
+    conn.execute("DROP TABLE IF EXISTS temp.best")
+    conn.execute("CREATE TEMP TABLE best AS SELECT store, pid, MIN(rank) AS r FROM rankings GROUP BY store, pid")
+    conn.execute("CREATE INDEX temp.best_ix ON best(store, pid)")
+    cur = conn.execute(
+        """DELETE FROM products WHERE rowid IN (
+             SELECT rowid FROM (
+               SELECT p.rowid AS rowid,
+                      ROW_NUMBER() OVER (PARTITION BY p.store
+                                         ORDER BY b.r IS NULL, b.r, p.phash IS NULL, p.last_seen DESC, p.pid) AS n
+               FROM products p LEFT JOIN temp.best b ON b.store=p.store AND b.pid=p.pid) WHERE n > ?)""", (cap,))
+    removed = cur.rowcount
+    conn.execute("DROP TABLE temp.best")
+    conn.execute("DELETE FROM rankings WHERE NOT EXISTS "
+                 "(SELECT 1 FROM products p WHERE p.store=rankings.store AND p.pid=rankings.pid)")
+    conn.commit()
+    if vacuum and removed > 1000:
+        conn.execute("VACUUM")
+    return removed

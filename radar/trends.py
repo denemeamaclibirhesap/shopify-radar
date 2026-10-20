@@ -2,8 +2,8 @@
 import sqlite3
 from collections import defaultdict
 
-BANDS = 7        # 7 bant x 9 bit: Hamming mesafesi <= 6 ise en az bir bant birebir aynı kalır
-BAND_BITS = 9
+BANDS = 6        # 6 bant x 11 bit: Hamming mesafesi <= 5 ise en az bir bant birebir aynı kalır
+BAND_BITS = 11
 MAX_BUCKET = 400  # tek bir kovada karşılaştırılacak en fazla benzersiz görsel
 
 
@@ -27,7 +27,7 @@ class _UF:
             self.p[ra] = rb
 
 
-def cross_store_groups(conn: sqlite3.Connection, max_distance: int = 6, min_stores: int = 2):
+def cross_store_groups(conn: sqlite3.Connection, max_distance: int = 5, min_stores: int = 2):
     """Aynı görseli kullanan ürünleri farklı mağazalar arasında gruplar."""
     rows = conn.execute(
         "SELECT store, pid, title, price, image_url, phash FROM products WHERE phash IS NOT NULL"

@@ -1,9 +1,9 @@
 {
  "generated": "2026-10-20",
  "stats": {
-  "stores": 539,
-  "tr_stores": 5,
-  "products": 50480
+  "stores": 545,
+  "tr_stores": 11,
+  "products": 54931
  },
  "new_stores": [
   {
@@ -40,6 +40,48 @@
    "currency": "TRY",
    "is_tr": 1,
    "product_count": 1
+  },
+  {
+   "domain": "dagi.com.tr",
+   "first_seen": "2026-10-20",
+   "currency": "TRY",
+   "is_tr": 1,
+   "product_count": 1000
+  },
+  {
+   "domain": "derimod.com.tr",
+   "first_seen": "2026-10-20",
+   "currency": "TRY",
+   "is_tr": 1,
+   "product_count": 1000
+  },
+  {
+   "domain": "reeder.com.tr",
+   "first_seen": "2026-10-20",
+   "currency": "TRY",
+   "is_tr": 1,
+   "product_count": 274
+  },
+  {
+   "domain": "dreametech.com.tr",
+   "first_seen": "2026-10-20",
+   "currency": "TRY",
+   "is_tr": 1,
+   "product_count": 177
+  },
+  {
+   "domain": "jumbo.com.tr",
+   "first_seen": "2026-10-20",
+   "currency": "TRY",
+   "is_tr": 1,
+   "product_count": 1000
+  },
+  {
+   "domain": "flyingtiger.com.tr",
+   "first_seen": "2026-10-20",
+   "currency": "TRY",
+   "is_tr": 1,
+   "product_count": 1000
   },
   {
    "domain": "retrogenie.co.uk",
@@ -663,48 +705,6 @@
    "currency": "USD",
    "is_tr": 0,
    "product_count": 17
-  },
-  {
-   "domain": "maiabotanical.si",
-   "first_seen": "2026-10-20",
-   "currency": "EUR",
-   "is_tr": 0,
-   "product_count": 26
-  },
-  {
-   "domain": "cozyminobaby.com",
-   "first_seen": "2026-10-20",
-   "currency": null,
-   "is_tr": 0,
-   "product_count": 0
-  },
-  {
-   "domain": "compacked.co",
-   "first_seen": "2026-10-20",
-   "currency": "USD",
-   "is_tr": 0,
-   "product_count": 4
-  },
-  {
-   "domain": "buttermebliss.com",
-   "first_seen": "2026-10-20",
-   "currency": "USD",
-   "is_tr": 0,
-   "product_count": 35
-  },
-  {
-   "domain": "lovirazy.store",
-   "first_seen": "2026-10-20",
-   "currency": "RON",
-   "is_tr": 0,
-   "product_count": 10
-  },
-  {
-   "domain": "myheritageshop.co.uk",
-   "first_seen": "2026-10-20",
-   "currency": "GBP",
-   "is_tr": 0,
-   "product_count": 5
   }
  ],
  "cross_store": [

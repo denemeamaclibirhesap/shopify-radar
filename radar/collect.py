@@ -39,13 +39,36 @@ async def fetch_bestsellers(client: httpx.AsyncClient, domain: str, limit: int =
         return []
 
 
-async def detect_currency(client: httpx.AsyncClient, domain: str) -> str | None:
+HTML_LANG_TR_RE = re.compile(r'<html[^>]*\blang=["\']tr\b', re.I)
+LOCALE_TR_RE = re.compile(r'Shopify\.locale\s*=\s*"tr', re.I)
+TR_TITLE_LETTERS = set("ğışİ")
+
+
+async def fetch_home(client: httpx.AsyncClient, domain: str) -> str:
     try:
-        r = await client.get(f"https://{domain}/")
-        m = CURRENCY_RE.search(r.text)
-        return m.group(1) if m else None
+        return (await client.get(f"https://{domain}/")).text
     except httpx.HTTPError:
-        return None
+        return ""
+
+
+def parse_currency(html: str) -> str | None:
+    m = CURRENCY_RE.search(html)
+    return m.group(1) if m else None
+
+
+def looks_turkish(html: str, titles: list[str]) -> bool:
+    """Para birimi TRY olmasa da Türkçe satan mağazayı yakalar (sayfa dili / ürün adları)."""
+    if HTML_LANG_TR_RE.search(html) or LOCALE_TR_RE.search(html):
+        return True
+    titles = [t for t in titles if t]
+    if not titles:
+        return False
+    hits = sum(1 for t in titles if any(c in TR_TITLE_LETTERS for c in t))
+    return hits >= 3 and hits / len(titles) >= 0.2
+
+
+async def detect_currency(client: httpx.AsyncClient, domain: str) -> str | None:
+    return parse_currency(await fetch_home(client, domain))
 
 
 async def hash_image(client: httpx.AsyncClient, url: str) -> str | None:

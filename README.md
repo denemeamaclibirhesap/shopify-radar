@@ -4,8 +4,8 @@ Yeni açılan Shopify mağazalarını keşfeden, ürünlerini toplayan ve mağaz
 
 ## Ne yapar?
 
-1. **Mağaza keşfi:** Günlük yeni alan adı listesini tarar. DNS ile Shopify adaylarını eler, `/products.json` ile doğrular. `.tr` alan adları öncelikli.
-2. **Ürün toplama:** Mağazaların herkese açık `/products.json` verisini ve `TRY` para birimini kaydeder.
+1. **Mağaza keşfi:** Günlük yeni alan adı listesini tarar. DNS ile Shopify adaylarını eler, `/products.json` ile doğrular. `.tr` alan adları öncelikli; ayrıca crt.sh sertifika kayıtlarından yeni `.tr` alan adları toplanır ve Türkçe görünen `.com` adları öne alınır.
+2. **Ürün toplama:** Mağazaların herkese açık `/products.json` verisini ve `TRY` para birimini kaydeder. Para birimi TRY olmasa bile sayfa dili/ürün adları Türkçe ise mağaza Türk sayılır.
 3. **Sıralama takibi:** Herkese açık "çok satanlar" sıralamasını her taramada kaydeder. Bu **gerçek satış adedi değildir**, sadece sıralama değişimidir.
 4. **Mağazalar arası eşleştirme:** Ürün görsellerinin pHash parmak izini karşılaştırarak farklı isimlerle satılan aynı ürünü bulur. Görseller saklanmaz, yalnızca hash kaydedilir.
 5. **Rapor:** `docs/data.json` ve `docs/index.html` üretir (GitHub Pages veya Cloudflare Pages ile ücretsiz yayınlanır).

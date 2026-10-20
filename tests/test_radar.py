@@ -141,3 +141,40 @@ def test_rank_movers():
     assert movers[0]["title"] == "X" and movers[0]["change"] == 4
     assert any(m["new_entry"] for m in movers)
     assert all(m["title"] != "Y" for m in movers)
+
+
+def test_registrable_tr():
+    assert sources.registrable_tr("www.magaza.com.tr") == "magaza.com.tr"
+    assert sources.registrable_tr("api.shop.example.com.tr") == "example.com.tr"
+    assert sources.registrable_tr("butik.tr") == "butik.tr"
+
+
+def test_prioritize_turkish_hints():
+    out = sources.prioritize(["rastgele.com", "güzelmoda.com", "butikyeni.net", "a.com.tr"])
+    assert out[0] == "a.com.tr"
+    assert set(out[1:3]) == {"güzelmoda.com", "butikyeni.net"}
+    assert out[3] == "rastgele.com"
+
+
+def test_fetch_crtsh_filters_and_survives_errors(monkeypatch):
+    import datetime as dt
+    today = dt.date.today().isoformat()
+
+    def handler(req):
+        q = req.url.params["q"]
+        if q == "%.com.tr":
+            return httpx.Response(200, json=[
+                {"not_before": today + "T01:00:00", "name_value": "www.yeni.com.tr\n*.yeni.com.tr"},
+                {"not_before": "2001-01-01T00:00:00", "name_value": "eski.com.tr"}])
+        return httpx.Response(502)
+
+    async def go():
+        async with client_for(handler) as c:
+            return await sources.fetch_crtsh(c, suffixes=("com.tr", "net.tr"), delay=0)
+    assert run(go()) == ["yeni.com.tr"]
+
+
+def test_looks_turkish():
+    assert C.looks_turkish('<html lang="tr">', [])
+    assert not C.looks_turkish('<html lang="en">', ["Shirt", "Hat"])
+    assert C.looks_turkish("<html>", ["Çanta ışık", "Güneş", "Kış montu", "Bot"])

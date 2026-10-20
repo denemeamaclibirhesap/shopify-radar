@@ -3,7 +3,7 @@
  "stats": {
   "stores": 539,
   "tr_stores": 5,
-  "products": 41894
+  "products": 50480
  },
  "new_stores": [
   {
@@ -709,13 +709,33 @@
  ],
  "cross_store": [
   {
-   "stores": 4,
-   "title": "Air Vapormax 2019 SE \"Wolf Grey Blue\" CI1240 102",
-   "image_url": "https://cdn.shopify.com/s/files/1/0678/6213/4855/files/b4U34ohqBtw4KJgnvEeXU5Zk.png?v=1791289414",
+   "stores": 6,
+   "title": "AIR VAPORMAX 2019 MNS WMNS \"Teal\" AR6632 300",
+   "image_url": "https://cdn.shopify.com/s/files/1/0678/6213/4855/files/L8varSn9DWExsJ1z9ebXMLnT.png?v=1791289555",
    "listings": [
     {
      "store": "fastby.shop",
+     "title": "AIR VAPORMAX 2019 MNS WMNS \"Teal\" AR6632 300",
+     "price": 135.39
+    },
+    {
+     "store": "fastby.shop",
+     "title": "AIR VAPORMAX 2021 FK \"White Royal Volt\" DC9394 100",
+     "price": 135.39
+    },
+    {
+     "store": "fastby.shop",
+     "title": "Air Vapormax 2021 FK \"White Metallic Silver\" DB1550 100",
+     "price": 135.39
+    },
+    {
+     "store": "fastby.shop",
      "title": "Air Vapormax 2019 SE \"Wolf Grey Blue\" CI1240 102",
+     "price": 135.39
+    },
+    {
+     "store": "fastby.shop",
+     "title": "AIR VAPORMAX 2020 FLYKNIT MNS WMNS \"Black / Dark Grey\" CJ6741 003",
      "price": 135.39
     },
     {
@@ -732,6 +752,11 @@
      "store": "haiwhqq.shop",
      "title": "2002R \"Protection Pack - Sea Salt\" M2002RDC",
      "price": 130.0
+    },
+    {
+     "store": "shdiawqq.shop",
+     "title": "1906R \"NEW SPRUCE\" M1906RRC",
+     "price": 147.0
     },
     {
      "store": "jiott.shop",
@@ -752,6 +777,41 @@
      "store": "hiawhtt.shop",
      "title": "1906R \"Grey Day\" M1906RGR",
      "price": 90.0
+    },
+    {
+     "store": "ammcm.shop",
+     "title": "9060 \"Bisque Sea Salt\" U9060CCB",
+     "price": 130.5
+    },
+    {
+     "store": "ammcm.shop",
+     "title": "9060 \"ASOS Exclusive Pink Overdye\" U9060APP",
+     "price": 130.5
+    },
+    {
+     "store": "ammcm.shop",
+     "title": "9060 \"Blue White\" U9060NAF",
+     "price": 130.5
+    },
+    {
+     "store": "ammcm.shop",
+     "title": "9060 \"ASOS Exclusive - White Beige\" U9060SA",
+     "price": 130.5
+    },
+    {
+     "store": "ammcm.shop",
+     "title": "9060 \"Arid Stone Rose Sugar\" U9060JAR",
+     "price": 130.5
+    },
+    {
+     "store": "ammcm.shop",
+     "title": "9060 \"Bisque Frosted Glass\" U9060AUA",
+     "price": 130.5
+    },
+    {
+     "store": "ammcm.shop",
+     "title": "9060 \"ASOS Exclusive Sea Salt Leopard Print\" U9060asp",
+     "price": 130.5
     }
    ]
   },
@@ -865,6 +925,33 @@
   },
   {
    "stores": 3,
+   "title": "Air VaporMax 2021 FK \"KUMQUAT\" DM0025 101",
+   "image_url": "https://cdn.shopify.com/s/files/1/0678/6213/4855/files/b5nvwf2pjjcpqc4lilnnzmdcvxip.png?v=1791289375",
+   "listings": [
+    {
+     "store": "fastby.shop",
+     "title": "Air VaporMax 2021 FK \"KUMQUAT\" DM0025 101",
+     "price": 135.39
+    },
+    {
+     "store": "shdiawqq.shop",
+     "title": "1906 \"Eclipse Navy\" U1906NVP",
+     "price": 121.0
+    },
+    {
+     "store": "ammcm.shop",
+     "title": "9060 \"Black / Copper\" U9060BRO",
+     "price": 130.5
+    },
+    {
+     "store": "ammcm.shop",
+     "title": "9060 \"Black Red\" U90606LE",
+     "price": 130.5
+    }
+   ]
+  },
+  {
+   "stores": 3,
    "title": "Adaptateur DC 5,5 2,5 vers DC 8 mm ETWOW",
    "image_url": "https://cdn.shopify.com/s/files/1/0918/4326/4837/files/115729-1.jpg?v=1736181191",
    "listings": [
@@ -909,6 +996,50 @@
   },
   {
    "stores": 3,
+   "title": "Tiparos Fish Sauce 1.5L",
+   "image_url": "https://cdn.shopify.com/s/files/1/1042/4247/9451/files/413n8CY2-CL.jpg?v=1791832350",
+   "listings": [
+    {
+     "store": "bulq.co.uk",
+     "title": "Tiparos Fish Sauce 1.5L",
+     "price": 8.49
+    },
+    {
+     "store": "padsport.store",
+     "title": "Rouleau PAD",
+     "price": 24.99
+    },
+    {
+     "store": "yankeecandleshop.shop",
+     "title": "Apple Pumpkin Concentrated Room Spray - US 35375",
+     "price": 3.14
+    }
+   ]
+  },
+  {
+   "stores": 3,
+   "title": "Mona Lisa Portrait Cap | Distressed Baseball Hat, Renaissance Art Patch",
+   "image_url": "https://cdn.shopify.com/s/files/1/0825/8407/6538/files/5106579c-il_fullxfull.7895378052_5289.jpg?v=1776762621",
+   "listings": [
+    {
+     "store": "searchtrendsbaskilar.com",
+     "title": "Mona Lisa Portrait Cap | Distressed Baseball Hat, Renaissance Art Patch",
+     "price": 30.1
+    },
+    {
+     "store": "maiabotanical.si",
+     "title": "Botanična barva za lase v prahu",
+     "price": 12.5
+    },
+    {
+     "store": "romewisdom.com",
+     "title": "Dum Spiro Spero – While I Breathe, I Hope | T-Shirt",
+     "price": 29.9
+    }
+   ]
+  },
+  {
+   "stores": 3,
    "title": "Unisex garment-dyed heavyweight t-shirt",
    "image_url": "https://cdn.shopify.com/s/files/1/0810/6799/9381/files/unisex-garment-dyed-heavyweight-t-shirt-black-front-and-back-6ad370e9940ba.jpg?v=1792241909",
    "listings": [
@@ -926,6 +1057,48 @@
      "store": "heymerica.com",
      "title": "Unisex classic tee",
      "price": 18.5
+    }
+   ]
+  },
+  {
+   "stores": 3,
+   "title": "Acnelak 4 in 1 Pimple Care Face Wash",
+   "image_url": "https://cdn.shopify.com/s/files/1/1028/9093/0455/files/Untitleddesign_8_6b271c43-ff19-4ac4-b303-1da5c6aff5fd.png?v=1792428063",
+   "listings": [
+    {
+     "store": "jewelsbychristopher.com",
+     "title": "Acnelak 4 in 1 Pimple Care Face Wash",
+     "price": 255.0
+    },
+    {
+     "store": "lunua.co",
+     "title": "Still Wood 30ml",
+     "price": 7.5
+    },
+    {
+     "store": "lunua.co",
+     "title": "Musk Amber 30ml",
+     "price": 7.5
+    },
+    {
+     "store": "lunua.co",
+     "title": "STILL RINSE 30ml",
+     "price": 7.5
+    },
+    {
+     "store": "organzanaturalskincare.co.uk",
+     "title": "Organza Acne Serum",
+     "price": 35.0
+    },
+    {
+     "store": "organzanaturalskincare.co.uk",
+     "title": "Organza Skin Brightening Serum (Cell Renew)",
+     "price": 36.0
+    },
+    {
+     "store": "organzanaturalskincare.co.uk",
+     "title": "Organza 24K Liquid Gold Elixir Oud",
+     "price": 69.99
     }
    ]
   },
@@ -1063,35 +1236,18 @@
   },
   {
    "stores": 2,
-   "title": "AIR VAPORMAX 2020 FLYKNIT MNS WMNS \"Black / Dark Grey\" CJ6741 003",
-   "image_url": "https://cdn.shopify.com/s/files/1/0678/6213/4855/files/9Goh9JXuwjz644suvdw8zzw3.png?v=1791289406",
+   "title": "Air VaporMax 2021 FK \"Black Anthracite\" DH4084 001",
+   "image_url": "https://cdn.shopify.com/s/files/1/0678/6213/4855/files/tt7edlhr2abttj7aegggyy2cuacg.png?v=1791289601",
    "listings": [
     {
      "store": "fastby.shop",
-     "title": "AIR VAPORMAX 2020 FLYKNIT MNS WMNS \"Black / Dark Grey\" CJ6741 003",
+     "title": "Air VaporMax 2021 FK \"Black Anthracite\" DH4084 001",
      "price": 135.39
     },
     {
-     "store": "shdiawqq.shop",
-     "title": "1906R \"NEW SPRUCE\" M1906RRC",
-     "price": 147.0
-    }
-   ]
-  },
-  {
-   "stores": 2,
-   "title": "Air VaporMax 2021 FK \"KUMQUAT\" DM0025 101",
-   "image_url": "https://cdn.shopify.com/s/files/1/0678/6213/4855/files/b5nvwf2pjjcpqc4lilnnzmdcvxip.png?v=1791289375",
-   "listings": [
-    {
-     "store": "fastby.shop",
-     "title": "Air VaporMax 2021 FK \"KUMQUAT\" DM0025 101",
-     "price": 135.39
-    },
-    {
-     "store": "shdiawqq.shop",
-     "title": "1906 \"Eclipse Navy\" U1906NVP",
-     "price": 121.0
+     "store": "ammcm.shop",
+     "title": "9060 \"Black / Washed Burgundy\" U9060BLA",
+     "price": 130.5
     }
    ]
   },
@@ -1126,23 +1282,6 @@
      "store": "perfectsnacksstore.com",
      "title": "Chocolate Covered Peanut Butter - Mini Size",
      "price": 8.7
-    }
-   ]
-  },
-  {
-   "stores": 2,
-   "title": "Tiparos Fish Sauce 1.5L",
-   "image_url": "https://cdn.shopify.com/s/files/1/1042/4247/9451/files/413n8CY2-CL.jpg?v=1791832350",
-   "listings": [
-    {
-     "store": "bulq.co.uk",
-     "title": "Tiparos Fish Sauce 1.5L",
-     "price": 8.49
-    },
-    {
-     "store": "padsport.store",
-     "title": "Rouleau PAD",
-     "price": 24.99
     }
    ]
   },
@@ -1199,6 +1338,40 @@
   },
   {
    "stores": 2,
+   "title": "Gaufres aux bleuets 🧇🫐",
+   "image_url": "https://cdn.shopify.com/s/files/1/0677/2060/9978/files/0FE9CF58-A306-4E6F-BECB-BE0C50FB148D.jpg?v=1735996951",
+   "listings": [
+    {
+     "store": "flammeseternelles.ca",
+     "title": "Gaufres aux bleuets 🧇🫐",
+     "price": 10.0
+    },
+    {
+     "store": "birdeux.com",
+     "title": "Form Cap",
+     "price": 0.0
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "Women's Long Sleeve Tee",
+   "image_url": "https://cdn.shopify.com/s/files/1/1084/3288/3793/files/3133926695343380757_2048.jpg?v=1792336431",
+   "listings": [
+    {
+     "store": "themopedclub.com",
+     "title": "Women's Long Sleeve Tee",
+     "price": 36.99
+    },
+    {
+     "store": "romewisdom.com",
+     "title": "Hannibal – Find a Way or Make One | T-Shirt (Back Print)",
+     "price": 34.9
+    }
+   ]
+  },
+  {
+   "stores": 2,
    "title": "R.I.P Twenties Woven Blanket | Nostalgia Throw, Millennial Humor",
    "image_url": "https://cdn.shopify.com/s/files/1/0825/8407/6538/files/2b734058-il_fullxfull.7895414278_392p.jpg?v=1776762621",
    "listings": [
@@ -1216,23 +1389,6 @@
      "store": "hirayawear.shop",
      "title": "Floral Woven Blanket — Powder Blue☁️ Throw",
      "price": 48.99
-    }
-   ]
-  },
-  {
-   "stores": 2,
-   "title": "Mona Lisa Portrait Cap | Distressed Baseball Hat, Renaissance Art Patch",
-   "image_url": "https://cdn.shopify.com/s/files/1/0825/8407/6538/files/5106579c-il_fullxfull.7895378052_5289.jpg?v=1776762621",
-   "listings": [
-    {
-     "store": "searchtrendsbaskilar.com",
-     "title": "Mona Lisa Portrait Cap | Distressed Baseball Hat, Renaissance Art Patch",
-     "price": 30.1
-    },
-    {
-     "store": "maiabotanical.si",
-     "title": "Botanična barva za lase v prahu",
-     "price": 12.5
     }
    ]
   },
@@ -2166,6 +2322,23 @@
   },
   {
    "stores": 2,
+   "title": "Michael Jackson King Of Pop T-Shirt - US 3421",
+   "image_url": "https://cdn.shopify.com/s/files/1/1007/2453/9672/files/36234739_hi.jpg?v=1792130639",
+   "listings": [
+    {
+     "store": "hottopicshop.shop",
+     "title": "Michael Jackson King Of Pop T-Shirt - US 3421",
+     "price": 7.47
+    },
+    {
+     "store": "blainsshop.store",
+     "title": "Essential Cotton T-Shirt",
+     "price": 11.98
+    }
+   ]
+  },
+  {
+   "stores": 2,
    "title": "Metallica NorCal Skull Tie-Dye Girls T-Shirt - US 0757",
    "image_url": "https://cdn.shopify.com/s/files/1/1007/2453/9672/files/33303856_hi.jpg?v=1792130571",
    "listings": [
@@ -2220,6 +2393,23 @@
   },
   {
    "stores": 2,
+   "title": "Club Professional Grade Sublimation Printing Volleyball Set",
+   "image_url": "https://cdn.shopify.com/s/files/1/0988/8419/0578/files/VU14-1.jpg?v=1792215187",
+   "listings": [
+    {
+     "store": "attirery.com",
+     "title": "Club Professional Grade Sublimation Printing Volleyball Set",
+     "price": 136.0
+    },
+    {
+     "store": "buyzavellea.com",
+     "title": "Bijoux Indiscrets Oral Sex Balm, Cooling Coconut Gloss, Slow Sex, 10ml",
+     "price": 66.49
+    }
+   ]
+  },
+  {
+   "stores": 2,
    "title": "Bio-Collagen Plumping Stick For Women +50",
    "image_url": "https://cdn.shopify.com/s/files/1/0781/8782/3178/files/hf_20260720_181843_1_1_a0ccb912-215a-4a93-9732-4576099fae13.webp?v=1791841145",
    "listings": [
@@ -2259,392 +2449,307 @@
   },
   {
    "stores": 2,
-   "title": "Small Plush Set — Pole Cat Trees",
-   "image_url": "https://cdn.shopify.com/s/files/1/1031/4884/7433/files/ll-v2-primary-row-25.png?v=1791149244",
+   "title": "Removable Multi-Layer Shower Water Filter",
+   "image_url": "https://cdn.shopify.com/s/files/1/1109/7889/2114/files/hf_20260926_184115_73c9f367-bfa6-40f8-9ea8-a00c46dc2e07.png?v=1790613478",
    "listings": [
     {
-     "store": "littleleopards.co.uk",
-     "title": "Small Plush Set — Pole Cat Trees",
-     "price": 200.0
+     "store": "rainhouse.shop",
+     "title": "Removable Multi-Layer Shower Water Filter",
+     "price": 53.0
     },
     {
-     "store": "perfectsnacksstore.com",
-     "title": "PB&J - Mini Size",
-     "price": 8.7
+     "store": "faanperfumes.nl",
+     "title": "FAAN Qasida Bidaya",
+     "price": 44.99
     }
    ]
   },
   {
    "stores": 2,
-   "title": "Forme D'expression single-breasted blazer",
-   "image_url": "https://cdn.shopify.com/s/files/1/1010/9547/3473/files/23762773_53738120_480.webp?v=1792330791",
+   "title": "Motivational Sipper Bottle - 2 litre",
+   "image_url": "https://cdn.shopify.com/s/files/1/0862/1647/4866/files/WhatsAppImage2024-11-13at23.49.52_1.jpg?v=1792224741",
    "listings": [
     {
-     "store": "shdiawqq.shop",
-     "title": "Forme D'expression single-breasted blazer",
-     "price": 1323.0
+     "store": "gatexpower.in",
+     "title": "Motivational Sipper Bottle - 2 litre",
+     "price": 299.0
     },
     {
-     "store": "nxtlvl.com.ec",
-     "title": "The Goddamn Fact 総柄パーカー",
-     "price": 11970.0
+     "store": "pearlpine.in",
+     "title": "Motivational Sipper Bottle - 2 litre",
+     "price": 299.0
     }
    ]
   },
   {
    "stores": 2,
-   "title": "Trainer Sneaker ‘All Black’",
-   "image_url": "https://cdn.shopify.com/s/files/1/0713/0968/8883/files/b1_2808f2a4-e822-4bbd-a407-a863daac32be.png?v=1792461061",
+   "title": "Blanket Storage Organizer",
+   "image_url": "https://cdn.shopify.com/s/files/1/0862/1647/4866/files/WhatsAppImage2024-11-13at23.55.13.jpg?v=1792224739",
    "listings": [
     {
-     "store": "basetab.site",
-     "title": "Trainer Sneaker ‘All Black’",
+     "store": "gatexpower.in",
+     "title": "Blanket Storage Organizer",
+     "price": 299.0
+    },
+    {
+     "store": "pearlpine.in",
+     "title": "Blanket Storage Organizer",
+     "price": 299.0
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "Big Car Interior Brush",
+   "image_url": "https://cdn.shopify.com/s/files/1/0862/1647/4866/files/WhatsAppImage2024-11-13at23.59.44.jpg?v=1792224738",
+   "listings": [
+    {
+     "store": "gatexpower.in",
+     "title": "Big Car Interior Brush",
      "price": 199.0
     },
     {
-     "store": "shopvelluxe.shop",
-     "title": "Cloud 6",
-     "price": 159.95
+     "store": "pearlpine.in",
+     "title": "Big Car Interior Brush",
+     "price": 199.0
     }
    ]
   },
   {
    "stores": 2,
-   "title": "NK Dunk Low Khaki Leopard",
-   "image_url": "https://cdn.shopify.com/s/files/1/0713/0968/8883/files/NikeDunkLowKhakiLeopard_2.png?v=1792461040",
+   "title": "2 in 1 Olive Oil Dispenser",
+   "image_url": "https://cdn.shopify.com/s/files/1/0862/1647/4866/files/WhatsAppImage2024-11-14at00.02.47.jpg?v=1792224736",
    "listings": [
     {
-     "store": "basetab.site",
-     "title": "NK Dunk Low Khaki Leopard",
-     "price": 99.9
+     "store": "gatexpower.in",
+     "title": "2 in 1 Olive Oil Dispenser",
+     "price": 449.0
     },
     {
-     "store": "casavalmora.com",
-     "title": "Gorra Plana Gandía",
-     "price": 29.95
+     "store": "pearlpine.in",
+     "title": "2 in 1 Olive Oil Dispenser",
+     "price": 449.0
     }
    ]
   },
   {
    "stores": 2,
-   "title": "1854 Trainer Sneakers Black",
-   "image_url": "https://cdn.shopify.com/s/files/1/0713/0968/8883/files/Gemini_Generated_Image_qx3uejqx3uejqx3u_00b28d03-f3f2-43c9-a45b-c382c2e3f317.png?v=1792460992",
+   "title": "Crystal Ball Lamp",
+   "image_url": "https://cdn.shopify.com/s/files/1/0862/1647/4866/files/WhatsAppImage2024-11-14at00.05.35_1.jpg?v=1792224735",
    "listings": [
     {
-     "store": "basetab.site",
-     "title": "1854 Trainer Sneakers Black",
-     "price": 133.0
+     "store": "gatexpower.in",
+     "title": "Crystal Ball Lamp",
+     "price": 299.0
     },
     {
-     "store": "shopvelluxe.shop",
-     "title": "Cloudrunner 2 Waterproof",
-     "price": 179.95
+     "store": "pearlpine.in",
+     "title": "Crystal Ball Lamp",
+     "price": 299.0
     }
    ]
   },
   {
    "stores": 2,
-   "title": "LED eye lamp",
-   "image_url": "https://cdn.shopify.com/s/files/1/0844/3746/7245/files/6987565363433.jpg?v=1792231325",
+   "title": "New Mini Sealing Machines",
+   "image_url": "https://cdn.shopify.com/s/files/1/0862/1647/4866/files/WhatsAppImage2024-11-14at00.08.12.jpg?v=1792224733",
    "listings": [
     {
-     "store": "zeninez.shop",
-     "title": "LED eye lamp",
-     "price": 25.46
+     "store": "gatexpower.in",
+     "title": "New Mini Sealing Machines",
+     "price": 249.0
     },
     {
-     "store": "cartyall.com",
-     "title": "LED eye lamp",
-     "price": 25.43
+     "store": "pearlpine.in",
+     "title": "New Mini Sealing Machines",
+     "price": 249.0
     }
    ]
   },
   {
    "stores": 2,
-   "title": "A Year of Ocean Majesty 2027 | Wall Calendar",
-   "image_url": "https://cdn.shopify.com/s/files/1/1065/9836/7571/files/cacbf182-6ede-4db1-80d9-1d373b085190.webp?v=1792425500",
+   "title": "Mini Printer",
+   "image_url": "https://cdn.shopify.com/s/files/1/0862/1647/4866/files/WhatsAppImage2024-11-14at00.11.32_1.jpg?v=1792224731",
    "listings": [
     {
-     "store": "letsdoshots.uk",
-     "title": "A Year of Ocean Majesty 2027 | Wall Calendar",
-     "price": 15.99
+     "store": "gatexpower.in",
+     "title": "Mini Printer",
+     "price": 949.0
     },
     {
-     "store": "letsdoshots.co.uk",
-     "title": "A Year of Ocean Majesty 2027 | Wall Calendar",
-     "price": 15.99
+     "store": "pearlpine.in",
+     "title": "Mini Printer",
+     "price": 949.0
     }
    ]
   },
   {
    "stores": 2,
-   "title": "Greyhope Horizons | Aberdeen Coast | Fine Art Photography Print",
-   "image_url": "https://cdn.shopify.com/s/files/1/1065/9836/7571/files/4b1d6b38-ea56-4af6-bd79-153f164aa7e1.webp?v=1791738993",
+   "title": "Astronaut Galaxy Projector",
+   "image_url": "https://cdn.shopify.com/s/files/1/0862/1647/4866/files/WhatsAppImage2024-11-14at00.13.46.jpg?v=1792224730",
    "listings": [
     {
-     "store": "letsdoshots.uk",
-     "title": "Greyhope Horizons | Aberdeen Coast | Fine Art Photography Print",
-     "price": 37.13
+     "store": "gatexpower.in",
+     "title": "Astronaut Galaxy Projector",
+     "price": 799.0
     },
     {
-     "store": "letsdoshots.co.uk",
-     "title": "Greyhope Horizons | Aberdeen Coast | Fine Art Photography Print",
-     "price": 37.13
+     "store": "pearlpine.in",
+     "title": "Astronaut Galaxy Projector",
+     "price": 799.0
     }
    ]
   },
   {
    "stores": 2,
-   "title": "A Sky in Transition | Fine Art Photography Print",
-   "image_url": "https://cdn.shopify.com/s/files/1/1065/9836/7571/files/4786795a-a76d-4a43-9bbf-21970497ed62.webp?v=1791737641",
+   "title": "New Saree Packing Covers (1 pcs)",
+   "image_url": "https://cdn.shopify.com/s/files/1/0862/1647/4866/files/WhatsAppImage2024-11-14at00.16.21.jpg?v=1792224728",
    "listings": [
     {
-     "store": "letsdoshots.uk",
-     "title": "A Sky in Transition | Fine Art Photography Print",
-     "price": 37.13
+     "store": "gatexpower.in",
+     "title": "New Saree Packing Covers (1 pcs)",
+     "price": 249.0
     },
     {
-     "store": "letsdoshots.co.uk",
-     "title": "A Sky in Transition | Fine Art Photography Print",
-     "price": 37.13
+     "store": "pearlpine.in",
+     "title": "New Saree Packing Covers (1 pcs)",
+     "price": 249.0
     }
    ]
   },
   {
    "stores": 2,
-   "title": "Edge of the North Sea | Newtonhill Cliffs, Aberdeenshire | Fine Art Photography Print",
-   "image_url": "https://cdn.shopify.com/s/files/1/1065/9836/7571/files/4fc1eec0-14a1-40e5-82cf-9585811fbc10.webp?v=1791734016",
+   "title": "New AC Cover",
+   "image_url": "https://cdn.shopify.com/s/files/1/0862/1647/4866/files/WhatsAppImage2024-11-14at00.18.42.jpg?v=1792224727",
    "listings": [
     {
-     "store": "letsdoshots.uk",
-     "title": "Edge of the North Sea | Newtonhill Cliffs, Aberdeenshire | Fine Art Photography Print",
-     "price": 37.13
+     "store": "gatexpower.in",
+     "title": "New AC Cover",
+     "price": 299.0
     },
     {
-     "store": "letsdoshots.co.uk",
-     "title": "Edge of the North Sea | Newtonhill Cliffs, Aberdeenshire | Fine Art Photography Print",
-     "price": 37.13
+     "store": "pearlpine.in",
+     "title": "New AC Cover",
+     "price": 299.0
     }
    ]
   },
   {
    "stores": 2,
-   "title": "Guns of the Heugh | Fine Art Photography Print",
-   "image_url": "https://cdn.shopify.com/s/files/1/1065/9836/7571/files/f00676eb-1289-49f7-be8d-3cc20ce87ff6.webp?v=1789838347",
+   "title": "Mini Shaver",
+   "image_url": "https://cdn.shopify.com/s/files/1/0862/1647/4866/files/WhatsAppImage2024-11-14at00.21.04_1.jpg?v=1792224725",
    "listings": [
     {
-     "store": "letsdoshots.uk",
-     "title": "Guns of the Heugh | Fine Art Photography Print",
-     "price": 23.63
+     "store": "gatexpower.in",
+     "title": "Mini Shaver",
+     "price": 349.0
     },
     {
-     "store": "letsdoshots.co.uk",
-     "title": "Guns of the Heugh | Fine Art Photography Print",
-     "price": 23.63
+     "store": "pearlpine.in",
+     "title": "Mini Shaver",
+     "price": 349.0
     }
    ]
   },
   {
    "stores": 2,
-   "title": "A Year in Flowers 2027 | A4 Wall Calendar",
-   "image_url": "https://cdn.shopify.com/s/files/1/1065/9836/7571/files/IMG_7061.jpg?v=1788542763",
+   "title": "Neck Roller Massager",
+   "image_url": "https://cdn.shopify.com/s/files/1/0862/1647/4866/files/WhatsAppImage2024-11-14at00.23.48_3677b6ad-6164-4f4e-8263-87dd38c1d40b.jpg?v=1792224723",
    "listings": [
     {
-     "store": "letsdoshots.uk",
-     "title": "A Year in Flowers 2027 | A4 Wall Calendar",
-     "price": 15.99
+     "store": "gatexpower.in",
+     "title": "Neck Roller Massager",
+     "price": 349.0
     },
     {
-     "store": "letsdoshots.co.uk",
-     "title": "A Year in Flowers 2027 | A4 Wall Calendar",
-     "price": 15.99
+     "store": "pearlpine.in",
+     "title": "Neck Roller Massager",
+     "price": 349.0
     }
    ]
   },
   {
    "stores": 2,
-   "title": "Echoes Along Blackhall Cliffs | Fine Art Photography Print",
-   "image_url": "https://cdn.shopify.com/s/files/1/1065/9836/7571/files/DSC_0184.jpg?v=1786901086",
+   "title": "Flexible Desk Lamp and Mobile Phone Holder",
+   "image_url": "https://cdn.shopify.com/s/files/1/0862/1647/4866/files/WhatsAppImage2024-11-14at00.28.14.jpg?v=1792224722",
    "listings": [
     {
-     "store": "letsdoshots.uk",
-     "title": "Echoes Along Blackhall Cliffs | Fine Art Photography Print",
-     "price": 28.13
+     "store": "gatexpower.in",
+     "title": "Flexible Desk Lamp and Mobile Phone Holder",
+     "price": 499.0
     },
     {
-     "store": "letsdoshots.co.uk",
-     "title": "Echoes Along Blackhall Cliffs | Fine Art Photography Print",
-     "price": 28.13
+     "store": "pearlpine.in",
+     "title": "Flexible Desk Lamp and Mobile Phone Holder",
+     "price": 499.0
     }
    ]
   },
   {
    "stores": 2,
-   "title": "Beacon Of Duncansby | Fine Art Photography Print",
-   "image_url": "https://cdn.shopify.com/s/files/1/1065/9836/7571/files/DSC_0670.jpg?v=1786724688",
+   "title": "Multi Cleaning Pen",
+   "image_url": "https://cdn.shopify.com/s/files/1/0862/1647/4866/files/WhatsAppImage2024-11-14at00.30.30.jpg?v=1792224720",
    "listings": [
     {
-     "store": "letsdoshots.uk",
-     "title": "Beacon Of Duncansby | Fine Art Photography Print",
-     "price": 59.77
+     "store": "gatexpower.in",
+     "title": "Multi Cleaning Pen",
+     "price": 249.0
     },
     {
-     "store": "letsdoshots.co.uk",
-     "title": "Beacon Of Duncansby | Fine Art Photography Print",
-     "price": 59.77
+     "store": "pearlpine.in",
+     "title": "Multi Cleaning Pen",
+     "price": 249.0
     }
    ]
   },
   {
    "stores": 2,
-   "title": "Falls of Feugh – The Wild Heart of Aberdeenshire | Fine Art Photography Print",
-   "image_url": "https://cdn.shopify.com/s/files/1/1065/9836/7571/files/DSC_0786.jpg?v=1786724079",
+   "title": "2 in 1 Momos Dumpling maker",
+   "image_url": "https://cdn.shopify.com/s/files/1/0862/1647/4866/files/WhatsAppImage2024-11-14at00.32.55_1.jpg?v=1792224718",
    "listings": [
     {
-     "store": "letsdoshots.uk",
-     "title": "Falls of Feugh – The Wild Heart of Aberdeenshire | Fine Art Photography Print",
-     "price": 10.3
+     "store": "gatexpower.in",
+     "title": "2 in 1 Momos Dumpling maker",
+     "price": 399.0
     },
     {
-     "store": "letsdoshots.co.uk",
-     "title": "Falls of Feugh – The Wild Heart of Aberdeenshire | Fine Art Photography Print",
-     "price": 10.3
+     "store": "pearlpine.in",
+     "title": "2 in 1 Momos Dumpling maker",
+     "price": 399.0
     }
    ]
   },
   {
    "stores": 2,
-   "title": "Harbour Calm at Lybster | Fine Art Photography Print",
-   "image_url": "https://cdn.shopify.com/s/files/1/1065/9836/7571/files/0108db8b-8dc2-4092-8412-d6eb65aee896.webp?v=1786655153",
+   "title": "Jewellery Organizer Box",
+   "image_url": "https://cdn.shopify.com/s/files/1/0862/1647/4866/files/WhatsAppImage2024-11-14at00.36.00.jpg?v=1792224717",
    "listings": [
     {
-     "store": "letsdoshots.uk",
-     "title": "Harbour Calm at Lybster | Fine Art Photography Print",
-     "price": 11.3
+     "store": "gatexpower.in",
+     "title": "Jewellery Organizer Box",
+     "price": 399.0
     },
     {
-     "store": "letsdoshots.co.uk",
-     "title": "Harbour Calm at Lybster | Fine Art Photography Print",
-     "price": 11.3
+     "store": "pearlpine.in",
+     "title": "Jewellery Organizer Box",
+     "price": 399.0
     }
    ]
   },
   {
    "stores": 2,
-   "title": "Field Marshal Kitchener – Heritage Portrait | Fine Art Photography Print",
-   "image_url": "https://cdn.shopify.com/s/files/1/1065/9836/7571/files/DSC_1694.jpg?v=1779141177",
+   "title": "Mobile Phone Waterproof Pouch",
+   "image_url": "https://cdn.shopify.com/s/files/1/0862/1647/4866/files/WhatsAppImage2024-11-14at00.40.19.jpg?v=1792224715",
    "listings": [
     {
-     "store": "letsdoshots.uk",
-     "title": "Field Marshal Kitchener – Heritage Portrait | Fine Art Photography Print",
-     "price": 28.13
+     "store": "gatexpower.in",
+     "title": "Mobile Phone Waterproof Pouch",
+     "price": 299.0
     },
     {
-     "store": "letsdoshots.co.uk",
-     "title": "Field Marshal Kitchener – Heritage Portrait | Fine Art Photography Print",
-     "price": 28.13
-    }
-   ]
-  },
-  {
-   "stores": 2,
-   "title": "Brighton Boy – Coastal Charm | Fine Art Photography Print",
-   "image_url": "https://cdn.shopify.com/s/files/1/1065/9836/7571/files/2024-09-0914.20.32.jpg?v=1779140879",
-   "listings": [
-    {
-     "store": "letsdoshots.uk",
-     "title": "Brighton Boy – Coastal Charm | Fine Art Photography Print",
-     "price": 28.13
-    },
-    {
-     "store": "letsdoshots.co.uk",
-     "title": "Brighton Boy – Coastal Charm | Fine Art Photography Print",
-     "price": 28.13
-    }
-   ]
-  },
-  {
-   "stores": 2,
-   "title": "Harbour Stillness at Port Erroll | Fine Art Photography Print",
-   "image_url": "https://cdn.shopify.com/s/files/1/1065/9836/7571/files/b3781bed-dcc1-463c-a5a5-e13913fb72c5.webp?v=1779119921",
-   "listings": [
-    {
-     "store": "letsdoshots.uk",
-     "title": "Harbour Stillness at Port Erroll | Fine Art Photography Print",
-     "price": 11.3
-    },
-    {
-     "store": "letsdoshots.co.uk",
-     "title": "Harbour Stillness at Port Erroll | Fine Art Photography Print",
-     "price": 11.3
-    }
-   ]
-  },
-  {
-   "stores": 2,
-   "title": "Calm Over Loch Tummel | Fine Art Photography Print",
-   "image_url": "https://cdn.shopify.com/s/files/1/1065/9836/7571/files/2024-08-3014.56.59-1.jpg?v=1779042332",
-   "listings": [
-    {
-     "store": "letsdoshots.uk",
-     "title": "Calm Over Loch Tummel | Fine Art Photography Print",
-     "price": 28.13
-    },
-    {
-     "store": "letsdoshots.co.uk",
-     "title": "Calm Over Loch Tummel | Fine Art Photography Print",
-     "price": 28.13
-    }
-   ]
-  },
-  {
-   "stores": 2,
-   "title": "Guardian of Fairy Cove | Fine Art Photography Print",
-   "image_url": "https://cdn.shopify.com/s/files/1/1065/9836/7571/files/2b7b3ac2-0e95-42a7-9e74-3e67299b1109.webp?v=1778945191",
-   "listings": [
-    {
-     "store": "letsdoshots.uk",
-     "title": "Guardian of Fairy Cove | Fine Art Photography Print",
-     "price": 12.63
-    },
-    {
-     "store": "letsdoshots.co.uk",
-     "title": "Guardian of Fairy Cove | Fine Art Photography Print",
-     "price": 12.63
-    }
-   ]
-  },
-  {
-   "stores": 2,
-   "title": "Fortress of the North – Bamburgh Castle | Fine Art Photography Print",
-   "image_url": "https://cdn.shopify.com/s/files/1/1065/9836/7571/files/DSC_0630.jpg?v=1778872139",
-   "listings": [
-    {
-     "store": "letsdoshots.uk",
-     "title": "Fortress of the North – Bamburgh Castle | Fine Art Photography Print",
-     "price": 28.13
-    },
-    {
-     "store": "letsdoshots.co.uk",
-     "title": "Fortress of the North – Bamburgh Castle | Fine Art Photography Print",
-     "price": 28.13
-    }
-   ]
-  },
-  {
-   "stores": 2,
-   "title": "Directions From The Edge | Fine Art Photography Print",
-   "image_url": "https://cdn.shopify.com/s/files/1/1065/9836/7571/files/a21f59d9-9474-49d4-abef-8d2aaddf75ab.webp?v=1778863506",
-   "listings": [
-    {
-     "store": "letsdoshots.uk",
-     "title": "Directions From The Edge | Fine Art Photography Print",
-     "price": 11.3
-    },
-    {
-     "store": "letsdoshots.co.uk",
-     "title": "Directions From The Edge | Fine Art Photography Print",
-     "price": 11.3
+     "store": "pearlpine.in",
+     "title": "Mobile Phone Waterproof Pouch",
+     "price": 299.0
     }
    ]
   }

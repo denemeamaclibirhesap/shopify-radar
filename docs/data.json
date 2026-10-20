@@ -1,9 +1,9 @@
 {
  "generated": "2026-10-20",
  "stats": {
-  "stores": 155,
-  "tr_stores": 3,
-  "products": 16901
+  "stores": 294,
+  "tr_stores": 4,
+  "products": 31627
  },
  "new_stores": [
   {
@@ -26,6 +26,13 @@
    "currency": "TRY",
    "is_tr": 1,
    "product_count": 2
+  },
+  {
+   "domain": "reyonled.com",
+   "first_seen": "2026-10-20",
+   "currency": "TRY",
+   "is_tr": 1,
+   "product_count": 1
   },
   {
    "domain": "retrogenie.co.uk",
@@ -698,35 +705,38 @@
    "currency": "EUR",
    "is_tr": 0,
    "product_count": 119
-  },
-  {
-   "domain": "attirery.com",
-   "first_seen": "2026-10-20",
-   "currency": "USD",
-   "is_tr": 0,
-   "product_count": 137
   }
  ],
  "cross_store": [
   {
-   "stores": 2,
-   "title": "Nike Dunk Low Retro",
-   "image_url": "https://cdn.shopify.com/s/files/1/1113/6647/2070/files/CB04691C-1A2A-423C-B5D1-7706FB606327.jpg?v=1791847691",
+   "stores": 4,
+   "title": "Shilajit 100% Puro 💎 Fonte de Energia Vital do Himalaia",
+   "image_url": "https://cdn.shopify.com/s/files/1/1091/6298/7854/files/ChatGPTImage18defev.de2026_13_26_08.png?v=1792250617",
    "listings": [
     {
-     "store": "dressstyle.es",
-     "title": "Nike Dunk Low Retro",
-     "price": 110.0
+     "store": "vitallaia.com",
+     "title": "Shilajit 100% Puro 💎 Fonte de Energia Vital do Himalaia",
+     "price": 39.99
     },
     {
-     "store": "elyanora.shop",
-     "title": "Nike Air Force 1 Low Sneakers - Woodland Camo with Tan Midsole",
-     "price": 114.97
+     "store": "esenciabalance.com",
+     "title": "Shilajit 100% Puro 💎 Fonte de Energia Vital do Himalaia",
+     "price": 39.99
+    },
+    {
+     "store": "revynora.com",
+     "title": "Shilajit 100% Puro 💎 Fonte de Energia Vital do Himalaia",
+     "price": 39.99
+    },
+    {
+     "store": "marevik.com",
+     "title": "Shilajit 100% Puro 💎 Fonte de Energia Vital do Himalaia",
+     "price": 39.99
     }
    ]
   },
   {
-   "stores": 2,
+   "stores": 3,
    "title": "Zapatilla deportiva LV Trainer",
    "image_url": "https://cdn.shopify.com/s/files/1/1113/6647/2070/files/4895F1CB-2464-4ADD-B869-C04074B2B7F2.jpg?v=1791846285",
    "listings": [
@@ -739,28 +749,16 @@
      "store": "elyanora.shop",
      "title": "Nike Air Force 1 Low Sneakers - Glossy Blue with Purple & Mint Accents",
      "price": 138.6
-    }
-   ]
-  },
-  {
-   "stores": 2,
-   "title": "Déguisement enquêtrice pull orange pour fille",
-   "image_url": "https://cdn.shopify.com/s/files/1/0988/4303/3924/files/54A12D8C1D6977DED49E38D5D603E00A.jpg?v=1792261014",
-   "listings": [
-    {
-     "store": "hallowinshop.com",
-     "title": "Déguisement enquêtrice pull orange pour fille",
-     "price": 51.52
     },
     {
-     "store": "blacksheepboutiqueco.com",
-     "title": "Crown Cross Necklace",
-     "price": 2.67
+     "store": "basetab.site",
+     "title": "J4 Retro White and Black 2024",
+     "price": 79.95
     }
    ]
   },
   {
-   "stores": 2,
+   "stores": 3,
    "title": "Air Vapormax 2019 SE \"Wolf Grey Blue\" CI1240 102",
    "image_url": "https://cdn.shopify.com/s/files/1/0678/6213/4855/files/b4U34ohqBtw4KJgnvEeXU5Zk.png?v=1791289414",
    "listings": [
@@ -783,6 +781,135 @@
      "store": "haiwhqq.shop",
      "title": "2002R \"Protection Pack - Sea Salt\" M2002RDC",
      "price": 130.0
+    },
+    {
+     "store": "jiott.shop",
+     "title": "327 WMNS \"Sea Salt Brighton Grey\" WS327KE",
+     "price": 91.0
+    }
+   ]
+  },
+  {
+   "stores": 3,
+   "title": "Unisex garment-dyed heavyweight t-shirt",
+   "image_url": "https://cdn.shopify.com/s/files/1/0810/6799/9381/files/unisex-garment-dyed-heavyweight-t-shirt-black-front-and-back-6ad370e9940ba.jpg?v=1792241909",
+   "listings": [
+    {
+     "store": "sugapicks.ca",
+     "title": "Unisex garment-dyed heavyweight t-shirt",
+     "price": 27.23
+    },
+    {
+     "store": "ravexon.us",
+     "title": "Calvin Ridley Tennessee Titans Jersey - Navy",
+     "price": 34.99
+    },
+    {
+     "store": "heymerica.com",
+     "title": "Unisex classic tee",
+     "price": 18.5
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "Nike Dunk Low Retro",
+   "image_url": "https://cdn.shopify.com/s/files/1/1113/6647/2070/files/CB04691C-1A2A-423C-B5D1-7706FB606327.jpg?v=1791847691",
+   "listings": [
+    {
+     "store": "dressstyle.es",
+     "title": "Nike Dunk Low Retro",
+     "price": 110.0
+    },
+    {
+     "store": "elyanora.shop",
+     "title": "Nike Air Force 1 Low Sneakers - Woodland Camo with Tan Midsole",
+     "price": 114.97
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "Déguisement enquêtrice pull orange pour fille",
+   "image_url": "https://cdn.shopify.com/s/files/1/0988/4303/3924/files/54A12D8C1D6977DED49E38D5D603E00A.jpg?v=1792261014",
+   "listings": [
+    {
+     "store": "hallowinshop.com",
+     "title": "Déguisement enquêtrice pull orange pour fille",
+     "price": 51.52
+    },
+    {
+     "store": "blacksheepboutiqueco.com",
+     "title": "Crown Cross Necklace",
+     "price": 2.67
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "AIR VAPORMAX 2020 FLYKNIT MNS WMNS \"Black / Dark Grey\" CJ6741 003",
+   "image_url": "https://cdn.shopify.com/s/files/1/0678/6213/4855/files/9Goh9JXuwjz644suvdw8zzw3.png?v=1791289406",
+   "listings": [
+    {
+     "store": "fastby.shop",
+     "title": "AIR VAPORMAX 2020 FLYKNIT MNS WMNS \"Black / Dark Grey\" CJ6741 003",
+     "price": 135.39
+    },
+    {
+     "store": "shdiawqq.shop",
+     "title": "1906R \"NEW SPRUCE\" M1906RRC",
+     "price": 147.0
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "Air VaporMax 2021 FK \"KUMQUAT\" DM0025 101",
+   "image_url": "https://cdn.shopify.com/s/files/1/0678/6213/4855/files/b5nvwf2pjjcpqc4lilnnzmdcvxip.png?v=1791289375",
+   "listings": [
+    {
+     "store": "fastby.shop",
+     "title": "Air VaporMax 2021 FK \"KUMQUAT\" DM0025 101",
+     "price": 135.39
+    },
+    {
+     "store": "shdiawqq.shop",
+     "title": "1906 \"Eclipse Navy\" U1906NVP",
+     "price": 121.0
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "PureFlow™ Stainless Fountain",
+   "image_url": "https://cdn.shopify.com/s/files/1/0688/2462/9485/files/4110c7e1-00cd-4275-8988-66bbc5db5031.jpg?v=1779656401",
+   "listings": [
+    {
+     "store": "maxtec.store",
+     "title": "PureFlow™ Stainless Fountain",
+     "price": 799.99
+    },
+    {
+     "store": "furryao.store",
+     "title": "Stainless Steel Cat Water Fountain 2.2L",
+     "price": 69.99
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "Sempio Naturally Brewed Soy Sauce 501s 500ml",
+   "image_url": "https://cdn.shopify.com/s/files/1/1042/4247/9451/files/61DZ7TelmrL.jpg?v=1791832342",
+   "listings": [
+    {
+     "store": "bulq.co.uk",
+     "title": "Sempio Naturally Brewed Soy Sauce 501s 500ml",
+     "price": 7.85
+    },
+    {
+     "store": "perfectsnacksstore.com",
+     "title": "Chocolate Covered Peanut Butter - Mini Size",
+     "price": 8.7
     }
    ]
   },
@@ -805,6 +932,23 @@
   },
   {
    "stores": 2,
+   "title": "Collagen Cleansing Mask",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/1454/2169/files/1d2b8a6c4a538c57e0e0ed952395.png?v=1792123136",
+   "listings": [
+    {
+     "store": "blacksheepboutiqueco.com",
+     "title": "Collagen Cleansing Mask",
+     "price": 5.04
+    },
+    {
+     "store": "anayacollectionsofficial.com",
+     "title": "Blue Aventurine, Dalmatian Jasper, Mookaite and Sesame Jasper Yellow gold vermeil or 18k gold earrings | by nlanlaVictory",
+     "price": 90032.91
+    }
+   ]
+  },
+  {
+   "stores": 2,
    "title": "Mona Lisa Portrait Cap | Distressed Baseball Hat, Renaissance Art Patch",
    "image_url": "https://cdn.shopify.com/s/files/1/0825/8407/6538/files/5106579c-il_fullxfull.7895378052_5289.jpg?v=1776762621",
    "listings": [
@@ -822,18 +966,687 @@
   },
   {
    "stores": 2,
-   "title": "Shilajit 100% Puro 💎 Fonte de Energia Vital do Himalaia",
-   "image_url": "https://cdn.shopify.com/s/files/1/1091/6298/7854/files/ChatGPTImage18defev.de2026_13_26_08.png?v=1792250617",
+   "title": "Knit Checkerboard Makeup Bag",
+   "image_url": "https://cdn.shopify.com/s/files/1/0832/4376/1892/files/Makeup_Bag_Cover_page_d508d0e0-aa82-4c81-80ff-89edc5e3b88c.png?v=1790883156",
    "listings": [
     {
-     "store": "vitallaia.com",
-     "title": "Shilajit 100% Puro 💎 Fonte de Energia Vital do Himalaia",
-     "price": 39.99
+     "store": "softpeopleclub.com",
+     "title": "Knit Checkerboard Makeup Bag",
+     "price": 19.99
     },
     {
-     "store": "esenciabalance.com",
-     "title": "Shilajit 100% Puro 💎 Fonte de Energia Vital do Himalaia",
-     "price": 39.99
+     "store": "eyewearme.ma",
+     "title": "MONO RIBBONE",
+     "price": 500.0
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE BASEBALL CAP IN DARK BLUE CANVAS",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/20230212_i1676170053_5734_8_jpg.jpg?v=1789228927",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE BASEBALL CAP IN DARK BLUE CANVAS",
+     "price": 52.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE BASEBALL CAP IN DARK BLUE CANVAS",
+     "price": 52.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE BASEBALL CAP MODEL 650190 IN BLACK CORDUROY",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_9e22700e_20250607_i1749306654830_256_0_0_jpg_94d9164f-b705-4005-8580-1397dab942e5.jpg?v=1789228925",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650190 IN BLACK CORDUROY",
+     "price": 47.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650190 IN BLACK CORDUROY",
+     "price": 47.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE BASEBALL CAP MODEL 650191 IN NAVY BLUE CORDUROY",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_9e22700e_20250607_i1749306702067_7085_0_4_jpg_a48ae7bf-a303-4853-826d-0f9e721bb9fb.jpg?v=1789228924",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650191 IN NAVY BLUE CORDUROY",
+     "price": 47.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650191 IN NAVY BLUE CORDUROY",
+     "price": 47.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE BASEBALL CAP MODEL 650192 IN WHITE FABRIC",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_9e22700e_20250607_i1749306753021_9581_0_1_jpg_6b26b156-d3a1-4abf-a807-06be26ad38bb.jpg?v=1789228923",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650192 IN WHITE FABRIC",
+     "price": 47.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650192 IN WHITE FABRIC",
+     "price": 47.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE BASEBALL CAP MODEL 650193 IN BROWN FABRIC",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_9e22700e_20250607_i1749306766801_5539_0_7_jpg_c380e2c8-afd1-4c45-b463-635c5370dcc3.jpg?v=1789228921",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650193 IN BROWN FABRIC",
+     "price": 47.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650193 IN BROWN FABRIC",
+     "price": 47.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE BASEBALL CAP MODEL 650286 IN NAVY BLUE FABRIC",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/imgHD_9a496598_20250606_cmp_i1749224227830_5523_0_2_jpg_850c12f5-35a4-4d9f-9f2d-a439bd5c6f76.jpg?v=1789228920",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650286 IN NAVY BLUE FABRIC",
+     "price": 47.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650286 IN NAVY BLUE FABRIC",
+     "price": 47.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE BASEBALL CAP MODEL 650288 IN WHITE FABRIC",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/imgHD_9a496598_20250606_cmp_i1749224279698_8062_0_1_jpg_d24ee595-f5a7-4918-b68b-cc12406da38b.jpg?v=1789228918",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650288 IN WHITE FABRIC",
+     "price": 47.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650288 IN WHITE FABRIC",
+     "price": 47.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE BASEBALL CAP MODEL 650506 IN BEIGE TEXTURED SPARKLE FABRIC",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_2dcc5b2b_20250221_i1740146836394_4333_0_1_jpg_c30e0246-dd35-402b-9657-26733df24182.jpg?v=1789228916",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650506 IN BEIGE TEXTURED SPARKLE FABRIC",
+     "price": 47.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650506 IN BEIGE TEXTURED SPARKLE FABRIC",
+     "price": 47.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE BASEBALL CAP MODEL 650507 IN WHITE TEXTURED SPARKLE FABRIC",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_2dcc5b2b_20250221_i1740146848474_6353_0_1_jpg_ee3bb54c-d80a-4ecc-a9e9-0dc8c4f28aa8.jpg?v=1789228915",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650507 IN WHITE TEXTURED SPARKLE FABRIC",
+     "price": 47.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650507 IN WHITE TEXTURED SPARKLE FABRIC",
+     "price": 47.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE BASEBALL CAP MODEL 650508 IN BLACK TEXTURED SPARKLE FABRIC",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_2dcc5b2b_20250221_i1740146860013_8425_0_1_jpg_eedbb285-37f7-442d-bf9d-662023be424e.jpg?v=1789228913",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650508 IN BLACK TEXTURED SPARKLE FABRIC",
+     "price": 47.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650508 IN BLACK TEXTURED SPARKLE FABRIC",
+     "price": 47.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE BASEBALL CAP MODEL 650509 IN YELLOW GREEN OMBRE COTTON",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_2dcc5b2b_20241108_i1731071811_7380_2_jpg_ed436abb-2e86-4106-988f-dd839b718807.jpg?v=1789228912",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650509 IN YELLOW GREEN OMBRE COTTON",
+     "price": 47.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650509 IN YELLOW GREEN OMBRE COTTON",
+     "price": 47.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE BASEBALL CAP MODEL 650510 IN BLACK OMBRE COTTON",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_2dcc5b2b_20241108_i1731071802_6538_3_jpg_01b68024-1a69-4b90-bc85-2028365ea127.jpg?v=1789228911",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650510 IN BLACK OMBRE COTTON",
+     "price": 47.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650510 IN BLACK OMBRE COTTON",
+     "price": 47.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE BASEBALL CAP MODEL 650511 IN BROWN TO PINK OMBRE COTTON",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_2dcc5b2b_20241108_i1731071793_2317_6_jpg_46f1165e-3125-4a2a-b9a6-b0cd287c02cb.jpg?v=1789228909",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650511 IN BROWN TO PINK OMBRE COTTON",
+     "price": 47.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650511 IN BROWN TO PINK OMBRE COTTON",
+     "price": 47.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE BASEBALL CAP MODEL 650700 IN GREEN COTTON",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_2a47f791_20240416_i1713245912_9727_1_jpg_e1e17ae1-2351-41c3-b475-02c453c25e48.jpg?v=1789228908",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650700 IN GREEN COTTON",
+     "price": 47.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650700 IN GREEN COTTON",
+     "price": 47.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE BASEBALL CAP MODEL 650701 IN GREEN COTTON",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_2a47f791_20240416_i1713245996_8705_4_jpg_7577c2c7-dc27-48a6-a797-0645e7c49311.jpg?v=1789228906",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650701 IN GREEN COTTON",
+     "price": 47.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650701 IN GREEN COTTON",
+     "price": 47.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE BASEBALL CAP MODEL 650702 IN GREEN COTTON",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_2a47f791_20240416_i1713246030_7453_5_jpg_134558f1-34f9-4fb7-87ee-67a987d13101.jpg?v=1789228905",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650702 IN GREEN COTTON",
+     "price": 47.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650702 IN GREEN COTTON",
+     "price": 47.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE BASEBALL CAP MODEL 650708 IN WINE PURPLE COTTON",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_2a47f791_20240715_i1721030202_5969_7_jpg_c887ca83-c65b-4789-972c-6029df4bceb5.jpg?v=1789228903",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650708 IN WINE PURPLE COTTON",
+     "price": 47.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650708 IN WINE PURPLE COTTON",
+     "price": 47.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE BASEBALL CAP MODEL 650709 IN LIGHT PURPLE COTTON",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_2a47f791_20240715_i1721030261_9203_1_jpg_d3988732-9bea-4a6e-b8d6-2f3d99dfd6ef.jpg?v=1789228902",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650709 IN LIGHT PURPLE COTTON",
+     "price": 47.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650709 IN LIGHT PURPLE COTTON",
+     "price": 47.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE BASEBALL CAP MODEL 650710 IN LIGHT PINK COTTON",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_2a47f791_20240715_i1721030288_2714_2_jpg_a0726956-5f37-4bd1-a715-aa7803d07930.jpg?v=1789228900",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650710 IN LIGHT PINK COTTON",
+     "price": 47.95
+    },
+    {
+     "store": "wispier.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650710 IN LIGHT PINK COTTON",
+     "price": 47.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650710 IN LIGHT PINK COTTON",
+     "price": 47.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650710 IN LIGHT PINK COTTON",
+     "price": 47.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE BASEBALL CAP MODEL 650711 IN LIGHT PINK COTTON",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_2a47f791_20240715_i1721030348_6814_8_jpg_bdc0b143-b867-41ae-8db7-4ee16817ae30.jpg?v=1789228897",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650711 IN LIGHT PINK COTTON",
+     "price": 47.95
+    },
+    {
+     "store": "wispier.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650712 IN LIGHT PURPLE COTTON",
+     "price": 47.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650711 IN LIGHT PINK COTTON",
+     "price": 47.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE BASEBALL CAP MODEL 650712 IN LIGHT PURPLE COTTON",
+     "price": 47.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE 25S BASEBALL CAP 735284 IN CANVAS",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_2a47f791_20231024_i1698116805_3263_1_jpg.jpg?v=1789228843",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE 25S BASEBALL CAP 735284 IN CANVAS",
+     "price": 52.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE 25S BASEBALL CAP 735284 IN CANVAS",
+     "price": 52.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE 25S BASEBALL CAP 735285 IN CANVAS",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_2a47f791_20231024_i1698116875_222_1_jpg.jpg?v=1789228841",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE 25S BASEBALL CAP 735285 IN CANVAS",
+     "price": 52.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE 25S BASEBALL CAP 735285 IN CANVAS",
+     "price": 52.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE 25S BASEBALL CAP 735286 IN CANVAS",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_2a47f791_20231024_i1698116909_8834_1_jpg.jpg?v=1789228840",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE 25S BASEBALL CAP 735286 IN CANVAS",
+     "price": 52.95
+    },
+    {
+     "store": "wispier.shop",
+     "title": "CELINE 25S BASEBALL CAP 735287 IN CANVAS",
+     "price": 52.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE 25S BASEBALL CAP 735286 IN CANVAS",
+     "price": 52.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE 25S BASEBALL CAP 735287 IN CANVAS",
+     "price": 52.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE 25S BASEBALL CAP IN DENIM BLUE LETTER EMBROIDERY",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_2a47f791_20231214_i1702530942_456_3_jpg.jpg?v=1789228837",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE 25S BASEBALL CAP IN DENIM BLUE LETTER EMBROIDERY",
+     "price": 52.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE 25S BASEBALL CAP IN DENIM BLUE LETTER EMBROIDERY",
+     "price": 52.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE 25S BUCKET BOW HAT  733401 IN BABY PINK",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_2dcc5b2b_20250228_i1740753955037_6366_0_1_jpg.jpg?v=1789228836",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE 25S BUCKET BOW HAT  733401 IN BABY PINK",
+     "price": 60.95
+    },
+    {
+     "store": "wispier.shop",
+     "title": "CELINE 25S BUCKET BOW HAT 733403 IN BEIGE",
+     "price": 60.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE 25S BUCKET BOW HAT  733401 IN BABY PINK",
+     "price": 60.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE 25S BUCKET BOW HAT 733403 IN BEIGE",
+     "price": 60.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE 25S BUCKET BOW HAT 733402 IN BLACK",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_2dcc5b2b_20250228_i1740753978907_6013_0_0_jpg.jpg?v=1789228835",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE 25S BUCKET BOW HAT 733402 IN BLACK",
+     "price": 60.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE 25S BUCKET BOW HAT 733402 IN BLACK",
+     "price": 60.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE 25S BUCKET BOW HAT 733404 IN IVORY",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_2dcc5b2b_20250228_i1740754034492_2528_0_0_jpg.jpg?v=1789228832",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE 25S BUCKET BOW HAT 733404 IN IVORY",
+     "price": 60.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE 25S BUCKET BOW HAT 733404 IN IVORY",
+     "price": 60.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE 25S BUCKET HAT 734583 IN BLACK",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_9a496598_20250410_i1744295229913_5986_0_0_jpg.jpg?v=1789228831",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE 25S BUCKET HAT 734583 IN BLACK",
+     "price": 60.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE 25S BUCKET HAT 734583 IN BLACK",
+     "price": 60.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE 25S BUCKET HAT 734584 IN BLUSH PINK",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_9a496598_20250410_i1744295186522_1039_0_0_jpg.jpg?v=1789228829",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE 25S BUCKET HAT 734584 IN BLUSH PINK",
+     "price": 60.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE 25S BUCKET HAT 734584 IN BLUSH PINK",
+     "price": 60.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE 25S BUCKET HAT 734982 IN BEIGE",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_9a496598_20250410_i1744295279828_7423_0_0_jpg.jpg?v=1789228828",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE 25S BUCKET HAT 734982 IN BEIGE",
+     "price": 60.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE 25S BUCKET HAT 734982 IN BEIGE",
+     "price": 60.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE 25S BUCKET HAT 734983 IN WHITE",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_9a496598_20250410_i1744295255756_6133_0_0_jpg.jpg?v=1789228827",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE 25S BUCKET HAT 734983 IN WHITE",
+     "price": 60.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE 25S BUCKET HAT 734983 IN WHITE",
+     "price": 60.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE 25S BUCKET HAT 735012 IN BEIGE",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_2dcc5b2b_20250228_i1740756348766_3981_0_0_jpg.jpg?v=1789228825",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE 25S BUCKET HAT 735012 IN BEIGE",
+     "price": 60.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE 25S BUCKET HAT 735012 IN BEIGE",
+     "price": 60.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE 25S BUCKET HAT 735013 IN IVORY",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_2dcc5b2b_20250228_i1740756363444_3598_0_0_jpg.jpg?v=1789228823",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE 25S BUCKET HAT 735013 IN IVORY",
+     "price": 60.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE 25S BUCKET HAT 735013 IN IVORY",
+     "price": 60.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE 25S BUCKET HAT 735018 IN NUDE",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_2dcc5b2b_20250324_i1742827558634_8928_0_2_jpg.jpg?v=1789228822",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE 25S BUCKET HAT 735018 IN NUDE",
+     "price": 56.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE 25S BUCKET HAT 735018 IN NUDE",
+     "price": 56.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE 25S BUCKET HAT 735019 IN BLACK",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_2dcc5b2b_20250324_i1742827582870_7044_0_2_jpg.jpg?v=1789228821",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE 25S BUCKET HAT 735019 IN BLACK",
+     "price": 56.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE 25S BUCKET HAT 735019 IN BLACK",
+     "price": 56.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "CELINE 25S VISOR HAT MODEL 735320 IN TWEED",
+   "image_url": "https://cdn.shopify.com/s/files/1/0763/5343/7853/files/img_2dcc5b2b_20250228_i1740755035787_667_0_1_jpg.jpg?v=1789228820",
+   "listings": [
+    {
+     "store": "wispier.shop",
+     "title": "CELINE 25S VISOR HAT MODEL 735320 IN TWEED",
+     "price": 65.95
+    },
+    {
+     "store": "glidees.shop",
+     "title": "CELINE 25S VISOR HAT MODEL 735320 IN TWEED",
+     "price": 65.95
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "Nike Air Force 1 Low Sneakers - All White with Raised Rose Details",
+   "image_url": "https://cdn.shopify.com/s/files/1/0848/1623/2663/files/ScreenShot_2026-10-02_092443_508.png?v=1792222173",
+   "listings": [
+    {
+     "store": "elyanora.shop",
+     "title": "Nike Air Force 1 Low Sneakers - All White with Raised Rose Details",
+     "price": 87.97
+    },
+    {
+     "store": "basetab.site",
+     "title": "AM TN Plus White",
+     "price": 74.95
     }
    ]
   },
@@ -851,6 +1664,57 @@
      "store": "mytelhandys.de",
      "title": "Apple iPhone Air",
      "price": 696.75
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "Small Plush Set — Pole Cat Trees",
+   "image_url": "https://cdn.shopify.com/s/files/1/1031/4884/7433/files/ll-v2-primary-row-25.png?v=1791149244",
+   "listings": [
+    {
+     "store": "littleleopards.co.uk",
+     "title": "Small Plush Set — Pole Cat Trees",
+     "price": 200.0
+    },
+    {
+     "store": "perfectsnacksstore.com",
+     "title": "PB&J - Mini Size",
+     "price": 8.7
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "LED eye lamp",
+   "image_url": "https://cdn.shopify.com/s/files/1/0844/3746/7245/files/6987565363433.jpg?v=1792231325",
+   "listings": [
+    {
+     "store": "zeninez.shop",
+     "title": "LED eye lamp",
+     "price": 25.46
+    },
+    {
+     "store": "cartyall.com",
+     "title": "LED eye lamp",
+     "price": 25.43
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "NBA 9Fifty RC Snapback",
+   "image_url": "https://cdn.shopify.com/s/files/1/0832/1997/2334/files/60891162_FOG_950_RC_33597_NBALOG_BLK-BLACK_1.jpg?v=1792421896",
+   "listings": [
+    {
+     "store": "jiott.shop",
+     "title": "NBA 9Fifty RC Snapback",
+     "price": 72.17
+    },
+    {
+     "store": "eyewearme.ma",
+     "title": "EARHART",
+     "price": 0.0
     }
    ]
   }

@@ -1,0 +1,860 @@
+{
+ "generated": "2026-10-20",
+ "stats": {
+  "stores": 155,
+  "tr_stores": 3,
+  "products": 16901
+ },
+ "new_stores": [
+  {
+   "domain": "gozmist.com.tr",
+   "first_seen": "2026-10-20",
+   "currency": "TRY",
+   "is_tr": 1,
+   "product_count": 1
+  },
+  {
+   "domain": "mieno.com.tr",
+   "first_seen": "2026-10-20",
+   "currency": "TRY",
+   "is_tr": 1,
+   "product_count": 1
+  },
+  {
+   "domain": "masallahclub.com",
+   "first_seen": "2026-10-20",
+   "currency": "TRY",
+   "is_tr": 1,
+   "product_count": 2
+  },
+  {
+   "domain": "retrogenie.co.uk",
+   "first_seen": "2026-10-20",
+   "currency": "GBP",
+   "is_tr": 0,
+   "product_count": 11
+  },
+  {
+   "domain": "nexigenic.com",
+   "first_seen": "2026-10-20",
+   "currency": "EUR",
+   "is_tr": 0,
+   "product_count": 3
+  },
+  {
+   "domain": "berracs.com",
+   "first_seen": "2026-10-20",
+   "currency": "EUR",
+   "is_tr": 0,
+   "product_count": 7
+  },
+  {
+   "domain": "lassise.fr",
+   "first_seen": "2026-10-20",
+   "currency": "EUR",
+   "is_tr": 0,
+   "product_count": 27
+  },
+  {
+   "domain": "materialplusai.store",
+   "first_seen": "2026-10-20",
+   "currency": "HKD",
+   "is_tr": 0,
+   "product_count": 9
+  },
+  {
+   "domain": "dressstyle.es",
+   "first_seen": "2026-10-20",
+   "currency": "EUR",
+   "is_tr": 0,
+   "product_count": 22
+  },
+  {
+   "domain": "bucklefolk.shop",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 1000
+  },
+  {
+   "domain": "kaisymx.com",
+   "first_seen": "2026-10-20",
+   "currency": "MXN",
+   "is_tr": 0,
+   "product_count": 4
+  },
+  {
+   "domain": "ghaf7.com",
+   "first_seen": "2026-10-20",
+   "currency": null,
+   "is_tr": 0,
+   "product_count": 0
+  },
+  {
+   "domain": "oakwell-lane.com",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 129
+  },
+  {
+   "domain": "fastby.shop",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 1000
+  },
+  {
+   "domain": "casa-textile.ro",
+   "first_seen": "2026-10-20",
+   "currency": "RON",
+   "is_tr": 0,
+   "product_count": 1000
+  },
+  {
+   "domain": "lavaprosite.online",
+   "first_seen": "2026-10-20",
+   "currency": "COP",
+   "is_tr": 0,
+   "product_count": 1
+  },
+  {
+   "domain": "dieselshopper.shop",
+   "first_seen": "2026-10-20",
+   "currency": "EUR",
+   "is_tr": 0,
+   "product_count": 26
+  },
+  {
+   "domain": "caloreva.store",
+   "first_seen": "2026-10-20",
+   "currency": "GBP",
+   "is_tr": 0,
+   "product_count": 82
+  },
+  {
+   "domain": "mynails.fr",
+   "first_seen": "2026-10-20",
+   "currency": "EUR",
+   "is_tr": 0,
+   "product_count": 367
+  },
+  {
+   "domain": "raventique.com",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 1
+  },
+  {
+   "domain": "dormicalm.com",
+   "first_seen": "2026-10-20",
+   "currency": "PEN",
+   "is_tr": 0,
+   "product_count": 1
+  },
+  {
+   "domain": "khatushyamsanitary.in",
+   "first_seen": "2026-10-20",
+   "currency": "INR",
+   "is_tr": 0,
+   "product_count": 5
+  },
+  {
+   "domain": "littleholly.online",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 22
+  },
+  {
+   "domain": "hallowinshop.com",
+   "first_seen": "2026-10-20",
+   "currency": "EUR",
+   "is_tr": 0,
+   "product_count": 56
+  },
+  {
+   "domain": "armcctro.shop",
+   "first_seen": "2026-10-20",
+   "currency": "NZD",
+   "is_tr": 0,
+   "product_count": 8
+  },
+  {
+   "domain": "over-watt.fr",
+   "first_seen": "2026-10-20",
+   "currency": "EUR",
+   "is_tr": 0,
+   "product_count": 1000
+  },
+  {
+   "domain": "trentbridgecredenza.com",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 100
+  },
+  {
+   "domain": "maxtec.store",
+   "first_seen": "2026-10-20",
+   "currency": "NOK",
+   "is_tr": 0,
+   "product_count": 14
+  },
+  {
+   "domain": "sofixenterprises.com",
+   "first_seen": "2026-10-20",
+   "currency": "INR",
+   "is_tr": 0,
+   "product_count": 6
+  },
+  {
+   "domain": "perfectlytexturedhair.com",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 10
+  },
+  {
+   "domain": "huchi.store",
+   "first_seen": "2026-10-20",
+   "currency": null,
+   "is_tr": 0,
+   "product_count": 0
+  },
+  {
+   "domain": "fetchandfold.shop",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 16
+  },
+  {
+   "domain": "thecraftsmen.co.za",
+   "first_seen": "2026-10-20",
+   "currency": "ZAR",
+   "is_tr": 0,
+   "product_count": 5
+  },
+  {
+   "domain": "alittlebearhug.org",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 3
+  },
+  {
+   "domain": "bulq.co.uk",
+   "first_seen": "2026-10-20",
+   "currency": "GBP",
+   "is_tr": 0,
+   "product_count": 131
+  },
+  {
+   "domain": "ddzbtyl.shop",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 320
+  },
+  {
+   "domain": "likevekt.co",
+   "first_seen": "2026-10-20",
+   "currency": "NOK",
+   "is_tr": 0,
+   "product_count": 4
+  },
+  {
+   "domain": "lumynaire.fr",
+   "first_seen": "2026-10-20",
+   "currency": "EUR",
+   "is_tr": 0,
+   "product_count": 6
+  },
+  {
+   "domain": "sculptedsignage.com",
+   "first_seen": "2026-10-20",
+   "currency": null,
+   "is_tr": 0,
+   "product_count": 0
+  },
+  {
+   "domain": "phonebase.eu",
+   "first_seen": "2026-10-20",
+   "currency": "EUR",
+   "is_tr": 0,
+   "product_count": 57
+  },
+  {
+   "domain": "aryehgoods.com",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 84
+  },
+  {
+   "domain": "udakpremium.com",
+   "first_seen": "2026-10-20",
+   "currency": null,
+   "is_tr": 0,
+   "product_count": 0
+  },
+  {
+   "domain": "konouz.ae",
+   "first_seen": "2026-10-20",
+   "currency": "AED",
+   "is_tr": 0,
+   "product_count": 28
+  },
+  {
+   "domain": "blacksheepboutiqueco.com",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 123
+  },
+  {
+   "domain": "flammeseternelles.ca",
+   "first_seen": "2026-10-20",
+   "currency": "CAD",
+   "is_tr": 0,
+   "product_count": 35
+  },
+  {
+   "domain": "glowsculptlab.com",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 2
+  },
+  {
+   "domain": "sultanalondon.com",
+   "first_seen": "2026-10-20",
+   "currency": "GBP",
+   "is_tr": 0,
+   "product_count": 1
+  },
+  {
+   "domain": "themopedclub.com",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 20
+  },
+  {
+   "domain": "vinora-es.com",
+   "first_seen": "2026-10-20",
+   "currency": "EUR",
+   "is_tr": 0,
+   "product_count": 1
+  },
+  {
+   "domain": "fastshop.es",
+   "first_seen": "2026-10-20",
+   "currency": null,
+   "is_tr": 0,
+   "product_count": 2
+  },
+  {
+   "domain": "searchtrendsbaskilar.com",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 39
+  },
+  {
+   "domain": "shopglowsnest.store",
+   "first_seen": "2026-10-20",
+   "currency": "GBP",
+   "is_tr": 0,
+   "product_count": 1
+  },
+  {
+   "domain": "partyenterprise.com",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 2
+  },
+  {
+   "domain": "alwaysarabian.com",
+   "first_seen": "2026-10-20",
+   "currency": null,
+   "is_tr": 0,
+   "product_count": 0
+  },
+  {
+   "domain": "wellness-mx.com",
+   "first_seen": "2026-10-20",
+   "currency": "MXN",
+   "is_tr": 0,
+   "product_count": 1
+  },
+  {
+   "domain": "evernearstore.com",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 1
+  },
+  {
+   "domain": "fansy.com.co",
+   "first_seen": "2026-10-20",
+   "currency": null,
+   "is_tr": 0,
+   "product_count": 0
+  },
+  {
+   "domain": "readytoleadstudies.com",
+   "first_seen": "2026-10-20",
+   "currency": null,
+   "is_tr": 0,
+   "product_count": 3
+  },
+  {
+   "domain": "luxerem.store",
+   "first_seen": "2026-10-20",
+   "currency": "MXN",
+   "is_tr": 0,
+   "product_count": 1
+  },
+  {
+   "domain": "heightmax.co",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 1
+  },
+  {
+   "domain": "xstremedesignz.com",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 9
+  },
+  {
+   "domain": "vinaybyru.com",
+   "first_seen": "2026-10-20",
+   "currency": "PKR",
+   "is_tr": 0,
+   "product_count": 40
+  },
+  {
+   "domain": "softpeopleclub.com",
+   "first_seen": "2026-10-20",
+   "currency": "CAD",
+   "is_tr": 0,
+   "product_count": 28
+  },
+  {
+   "domain": "mistrzled.com",
+   "first_seen": "2026-10-20",
+   "currency": "PLN",
+   "is_tr": 0,
+   "product_count": 1
+  },
+  {
+   "domain": "weishaarco.com",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 9
+  },
+  {
+   "domain": "sandandifog.com",
+   "first_seen": "2026-10-20",
+   "currency": null,
+   "is_tr": 0,
+   "product_count": 1000
+  },
+  {
+   "domain": "wavystudio.es",
+   "first_seen": "2026-10-20",
+   "currency": null,
+   "is_tr": 0,
+   "product_count": 0
+  },
+  {
+   "domain": "wispier.shop",
+   "first_seen": "2026-10-20",
+   "currency": null,
+   "is_tr": 0,
+   "product_count": 868
+  },
+  {
+   "domain": "mitrano.in",
+   "first_seen": "2026-10-20",
+   "currency": "INR",
+   "is_tr": 0,
+   "product_count": 3
+  },
+  {
+   "domain": "juguetear.com.ar",
+   "first_seen": "2026-10-20",
+   "currency": "ARS",
+   "is_tr": 0,
+   "product_count": 14
+  },
+  {
+   "domain": "nuvellia.it",
+   "first_seen": "2026-10-20",
+   "currency": "EUR",
+   "is_tr": 0,
+   "product_count": 26
+  },
+  {
+   "domain": "styletech.fr",
+   "first_seen": "2026-10-20",
+   "currency": "EUR",
+   "is_tr": 0,
+   "product_count": 48
+  },
+  {
+   "domain": "dreamwalk.lk",
+   "first_seen": "2026-10-20",
+   "currency": "LKR",
+   "is_tr": 0,
+   "product_count": 4
+  },
+  {
+   "domain": "fleursdecire.shop",
+   "first_seen": "2026-10-20",
+   "currency": "EUR",
+   "is_tr": 0,
+   "product_count": 6
+  },
+  {
+   "domain": "altaterrallc.store",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 20
+  },
+  {
+   "domain": "shirleysfamilyandfaithcreations.com",
+   "first_seen": "2026-10-20",
+   "currency": null,
+   "is_tr": 0,
+   "product_count": 0
+  },
+  {
+   "domain": "momoka.eu",
+   "first_seen": "2026-10-20",
+   "currency": "EUR",
+   "is_tr": 0,
+   "product_count": 2
+  },
+  {
+   "domain": "elyanora.shop",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 60
+  },
+  {
+   "domain": "hottopicshop.shop",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 1000
+  },
+  {
+   "domain": "kalakrishta.com",
+   "first_seen": "2026-10-20",
+   "currency": "INR",
+   "is_tr": 0,
+   "product_count": 217
+  },
+  {
+   "domain": "timberwarm.com",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 16
+  },
+  {
+   "domain": "sugapicks.ca",
+   "first_seen": "2026-10-20",
+   "currency": null,
+   "is_tr": 0,
+   "product_count": 21
+  },
+  {
+   "domain": "haddiebyrd.com",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 68
+  },
+  {
+   "domain": "vitallaia.com",
+   "first_seen": "2026-10-20",
+   "currency": "EUR",
+   "is_tr": 0,
+   "product_count": 1
+  },
+  {
+   "domain": "muqaddascollection.store",
+   "first_seen": "2026-10-20",
+   "currency": "PKR",
+   "is_tr": 0,
+   "product_count": 15
+  },
+  {
+   "domain": "revbox.co.uk",
+   "first_seen": "2026-10-20",
+   "currency": "GBP",
+   "is_tr": 0,
+   "product_count": 4
+  },
+  {
+   "domain": "jewelsbychristopher.com",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 123
+  },
+  {
+   "domain": "feinezeilen-shop.com",
+   "first_seen": "2026-10-20",
+   "currency": "EUR",
+   "is_tr": 0,
+   "product_count": 71
+  },
+  {
+   "domain": "avlshop.ca",
+   "first_seen": "2026-10-20",
+   "currency": "CAD",
+   "is_tr": 0,
+   "product_count": 59
+  },
+  {
+   "domain": "penpeptide.pl",
+   "first_seen": "2026-10-20",
+   "currency": "PLN",
+   "is_tr": 0,
+   "product_count": 124
+  },
+  {
+   "domain": "dearnoel.com",
+   "first_seen": "2026-10-20",
+   "currency": "EUR",
+   "is_tr": 0,
+   "product_count": 5
+  },
+  {
+   "domain": "hassan-beauty.com",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 17
+  },
+  {
+   "domain": "maiabotanical.si",
+   "first_seen": "2026-10-20",
+   "currency": "EUR",
+   "is_tr": 0,
+   "product_count": 26
+  },
+  {
+   "domain": "cozyminobaby.com",
+   "first_seen": "2026-10-20",
+   "currency": null,
+   "is_tr": 0,
+   "product_count": 0
+  },
+  {
+   "domain": "compacked.co",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 4
+  },
+  {
+   "domain": "buttermebliss.com",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 35
+  },
+  {
+   "domain": "lovirazy.store",
+   "first_seen": "2026-10-20",
+   "currency": "RON",
+   "is_tr": 0,
+   "product_count": 10
+  },
+  {
+   "domain": "myheritageshop.co.uk",
+   "first_seen": "2026-10-20",
+   "currency": "GBP",
+   "is_tr": 0,
+   "product_count": 5
+  },
+  {
+   "domain": "brennholzsmekal.de",
+   "first_seen": "2026-10-20",
+   "currency": "EUR",
+   "is_tr": 0,
+   "product_count": 119
+  },
+  {
+   "domain": "attirery.com",
+   "first_seen": "2026-10-20",
+   "currency": "USD",
+   "is_tr": 0,
+   "product_count": 137
+  }
+ ],
+ "cross_store": [
+  {
+   "stores": 2,
+   "title": "Nike Dunk Low Retro",
+   "image_url": "https://cdn.shopify.com/s/files/1/1113/6647/2070/files/CB04691C-1A2A-423C-B5D1-7706FB606327.jpg?v=1791847691",
+   "listings": [
+    {
+     "store": "dressstyle.es",
+     "title": "Nike Dunk Low Retro",
+     "price": 110.0
+    },
+    {
+     "store": "elyanora.shop",
+     "title": "Nike Air Force 1 Low Sneakers - Woodland Camo with Tan Midsole",
+     "price": 114.97
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "Zapatilla deportiva LV Trainer",
+   "image_url": "https://cdn.shopify.com/s/files/1/1113/6647/2070/files/4895F1CB-2464-4ADD-B869-C04074B2B7F2.jpg?v=1791846285",
+   "listings": [
+    {
+     "store": "dressstyle.es",
+     "title": "Zapatilla deportiva LV Trainer",
+     "price": 180.0
+    },
+    {
+     "store": "elyanora.shop",
+     "title": "Nike Air Force 1 Low Sneakers - Glossy Blue with Purple & Mint Accents",
+     "price": 138.6
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "Déguisement enquêtrice pull orange pour fille",
+   "image_url": "https://cdn.shopify.com/s/files/1/0988/4303/3924/files/54A12D8C1D6977DED49E38D5D603E00A.jpg?v=1792261014",
+   "listings": [
+    {
+     "store": "hallowinshop.com",
+     "title": "Déguisement enquêtrice pull orange pour fille",
+     "price": 51.52
+    },
+    {
+     "store": "blacksheepboutiqueco.com",
+     "title": "Crown Cross Necklace",
+     "price": 2.67
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "Air Vapormax 2019 SE \"Wolf Grey Blue\" CI1240 102",
+   "image_url": "https://cdn.shopify.com/s/files/1/0678/6213/4855/files/b4U34ohqBtw4KJgnvEeXU5Zk.png?v=1791289414",
+   "listings": [
+    {
+     "store": "fastby.shop",
+     "title": "Air Vapormax 2019 SE \"Wolf Grey Blue\" CI1240 102",
+     "price": 135.39
+    },
+    {
+     "store": "fastby.shop",
+     "title": "Air VaporMax 2021 FK \"Monochrome\" DH4084 100",
+     "price": 135.39
+    },
+    {
+     "store": "fastby.shop",
+     "title": "Air Vapormax \"White Silver\" 917963 101",
+     "price": 135.39
+    },
+    {
+     "store": "haiwhqq.shop",
+     "title": "2002R \"Protection Pack - Sea Salt\" M2002RDC",
+     "price": 130.0
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "10/3 NM-B Sheathed Cable L7150",
+   "image_url": "https://cdn.shopify.com/s/files/1/0858/2194/7992/files/31FY5WxxhKL.jpg?v=1792226287",
+   "listings": [
+    {
+     "store": "ddzbtyl.shop",
+     "title": "10/3 NM-B Sheathed Cable L7150",
+     "price": 20.9
+    },
+    {
+     "store": "printconcepts.com.au",
+     "title": "Welcome Home Postcard",
+     "price": 176.0
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "Mona Lisa Portrait Cap | Distressed Baseball Hat, Renaissance Art Patch",
+   "image_url": "https://cdn.shopify.com/s/files/1/0825/8407/6538/files/5106579c-il_fullxfull.7895378052_5289.jpg?v=1776762621",
+   "listings": [
+    {
+     "store": "searchtrendsbaskilar.com",
+     "title": "Mona Lisa Portrait Cap | Distressed Baseball Hat, Renaissance Art Patch",
+     "price": 30.1
+    },
+    {
+     "store": "maiabotanical.si",
+     "title": "Botanična barva za lase v prahu",
+     "price": 12.5
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "Shilajit 100% Puro 💎 Fonte de Energia Vital do Himalaia",
+   "image_url": "https://cdn.shopify.com/s/files/1/1091/6298/7854/files/ChatGPTImage18defev.de2026_13_26_08.png?v=1792250617",
+   "listings": [
+    {
+     "store": "vitallaia.com",
+     "title": "Shilajit 100% Puro 💎 Fonte de Energia Vital do Himalaia",
+     "price": 39.99
+    },
+    {
+     "store": "esenciabalance.com",
+     "title": "Shilajit 100% Puro 💎 Fonte de Energia Vital do Himalaia",
+     "price": 39.99
+    }
+   ]
+  },
+  {
+   "stores": 2,
+   "title": "Bio-Collagen Plumping Stick For Women +50",
+   "image_url": "https://cdn.shopify.com/s/files/1/0781/8782/3178/files/hf_20260720_181843_1_1_a0ccb912-215a-4a93-9732-4576099fae13.webp?v=1791841145",
+   "listings": [
+    {
+     "store": "trykivoraco.com",
+     "title": "Bio-Collagen Plumping Stick For Women +50",
+     "price": 29.99
+    },
+    {
+     "store": "mytelhandys.de",
+     "title": "Apple iPhone Air",
+     "price": 696.75
+    }
+   ]
+  }
+ ],
+ "movers": [],
+ "note": "Sıralamalar herkese açık 'çok satanlar' sayfalarından gelir; gerçek satış adedi değildir."
+}

@@ -178,3 +178,25 @@ def test_looks_turkish():
     assert C.looks_turkish('<html lang="tr">', [])
     assert not C.looks_turkish('<html lang="en">', ["Shirt", "Hat"])
     assert C.looks_turkish("<html>", ["Çanta ışık", "Güneş", "Kış montu", "Bot"])
+
+
+def test_fetch_majestic_tr_keeps_only_tr():
+    csv = ("GlobalRank,TldRank,Domain,TLD,RefSubNets\n"
+           "1,1,google.com,com,5\n"
+           "900,12,magaza.com.tr,tr,5\n"
+           "901,13,butik.tr,tr,5\n")
+
+    async def go():
+        async with client_for(lambda req: httpx.Response(200, text=csv)) as c:
+            return await sources.fetch_majestic_tr(c)
+    assert run(go()) == ["magaza.com.tr", "butik.tr"]
+
+
+def test_majestic_due_weekly():
+    import datetime as dt
+    from radar import cli
+    conn = connect(":memory:")
+    assert cli.majestic_due(conn, False)
+    conn.execute("INSERT INTO meta VALUES ('majestic_last', ?)", (dt.date.today().isoformat(),))
+    assert not cli.majestic_due(conn, False)
+    assert cli.majestic_due(conn, True)

@@ -77,6 +77,24 @@ def looks_turkish_domain(domain: str) -> bool:
     return any(c in TR_LETTERS for c in name) or any(h in name for h in TR_HINTS)
 
 
+MAJESTIC_URL = "https://downloads.majestic.com/majestic_million.csv"
+
+
+async def fetch_majestic_tr(client: httpx.AsyncClient) -> list[str]:
+    """Majestic Million (ücretsiz, CC BY 3.0) listesinden .tr siteleri.
+
+    Dosya ~80 MB: akış olarak okunur, yalnızca TLD sütunu 'tr' olan satırlar tutulur.
+    """
+    out: list[str] = []
+    async with client.stream("GET", MAJESTIC_URL, timeout=300) as r:
+        r.raise_for_status()
+        async for line in r.aiter_lines():
+            cols = line.split(",")
+            if len(cols) > 3 and cols[3] == "tr":
+                out.append(cols[2])
+    return parse_domains("\n".join(out))
+
+
 CRT_WORDS = TR_HINTS + ("shop", "store", "market", "online", "tekstil", "elektronik", "organik")
 CRT_PATTERNS = tuple(f"%{w}%.com.tr" for w in CRT_WORDS)
 

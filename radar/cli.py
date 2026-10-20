@@ -25,7 +25,15 @@ def new_client() -> httpx.AsyncClient:
                              limits=httpx.Limits(max_connections=60))
 
 
-async def gather_domains(client, args) -> list[str]:
+def majestic_due(conn, force: bool) -> bool:
+    """Büyük liste haftada bir indirilir (adaylar zaten kayıtlı olduğundan her gün gerekmez)."""
+    if force:
+        return True
+    row = conn.execute("SELECT value FROM meta WHERE key='majestic_last'").fetchone()
+    return not row or (dt.date.today() - dt.date.fromisoformat(row[0])).days >= 7
+
+
+async def gather_domains(conn, client, args) -> list[str]:
     """Tüm kaynaklardan alan adı topla; bir kaynak çökerse diğerleri devam eder."""
     if args.file:
         return sources.read_file(args.file)
@@ -35,7 +43,16 @@ async def gather_domains(client, args) -> list[str]:
         domains += await sources.fetch_whoisds(client, day)
     except Exception as e:  # noqa: BLE001 - kaynak çökse de tarama sürmeli
         print(f"WhoisDS atlandı: {type(e).__name__}")
-    if not args.no_crtsh:
+    if not args.no_majestic and majestic_due(conn, args.force_majestic):
+        try:
+            tr = await sources.fetch_majestic_tr(client)
+            print(f"Majestic: {len(tr)} .tr alan adı")
+            domains += tr
+            conn.execute("INSERT OR REPLACE INTO meta VALUES ('majestic_last', ?)", (today(),))
+            conn.commit()
+        except Exception as e:  # noqa: BLE001
+            print(f"Majestic atlandı: {type(e).__name__}")
+    if args.crtsh:  # crt.sh şu an sık sık 502 veriyor: varsayılan kapalı
         try:
             domains += await sources.fetch_crtsh(client)
         except Exception as e:  # noqa: BLE001
@@ -45,7 +62,7 @@ async def gather_domains(client, args) -> list[str]:
 
 async def cmd_discover(conn, args):
     async with new_client() as client:
-        domains = await gather_domains(client, args)
+        domains = await gather_domains(conn, client, args)
         known = {r[0] for r in conn.execute("SELECT domain FROM candidates")}
         todo = [d for d in sources.prioritize(domains) if d not in known][: args.limit]
         n_tr = sum(d.endswith(".tr") for d in todo)
@@ -155,7 +172,9 @@ def main():
     d.add_argument("--file")
     d.add_argument("--limit", type=int, default=150000)
     d.add_argument("--time-budget", type=int, default=700, help="keşif için saniye")
-    d.add_argument("--no-crtsh", action="store_true")
+    d.add_argument("--crtsh", action="store_true", help="crt.sh kaynağını da dene")
+    d.add_argument("--no-majestic", action="store_true")
+    d.add_argument("--force-majestic", action="store_true")
     c = sub.add_parser("collect")
     c.add_argument("--max-stores", type=int, default=600)
     c.add_argument("--max-images", type=int, default=40)
@@ -165,7 +184,9 @@ def main():
     run.add_argument("--file")
     run.add_argument("--limit", type=int, default=150000)
     run.add_argument("--time-budget", type=int, default=700, help="keşif için saniye")
-    run.add_argument("--no-crtsh", action="store_true")
+    run.add_argument("--crtsh", action="store_true", help="crt.sh kaynağını da dene")
+    run.add_argument("--no-majestic", action="store_true")
+    run.add_argument("--force-majestic", action="store_true")
     run.add_argument("--max-stores", type=int, default=600)
     run.add_argument("--max-images", type=int, default=40)
     run.add_argument("--out", default="docs")

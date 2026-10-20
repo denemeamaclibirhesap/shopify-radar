@@ -35,6 +35,10 @@ CREATE TABLE IF NOT EXISTS rankings (
     rank INTEGER NOT NULL,
     PRIMARY KEY (scan_date, store, pid)
 );
+CREATE TABLE IF NOT EXISTS meta (
+    key TEXT PRIMARY KEY,
+    value TEXT
+);
 CREATE INDEX IF NOT EXISTS idx_products_phash ON products(phash);
 """
 

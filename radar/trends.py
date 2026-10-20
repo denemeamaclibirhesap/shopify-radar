@@ -66,6 +66,11 @@ def cross_store_groups(conn: sqlite3.Connection, max_distance: int = 6, min_stor
     return out
 
 
+def _img(row) -> str | None:
+    url = row["image_url"]
+    return url.split("?", 1)[0] if url and url.startswith("https://") else None
+
+
 def rank_movers(conn: sqlite3.Connection, top: int = 50):
     """Son iki tarama arasında çok satanlar sıralamasında yükselenler."""
     dates = [r[0] for r in conn.execute(
@@ -74,7 +79,8 @@ def rank_movers(conn: sqlite3.Connection, top: int = 50):
         return []
     cur, prev = dates
     rows = conn.execute(
-        """SELECT c.store, c.pid, c.rank AS cur_rank, p.rank AS prev_rank, pr.title
+        """SELECT c.store, c.pid, c.rank AS cur_rank, p.rank AS prev_rank, pr.title,
+                  pr.image_url, pr.handle
            FROM rankings c
            LEFT JOIN rankings p ON p.scan_date=? AND p.store=c.store AND p.pid=c.pid
            LEFT JOIN products pr ON pr.store=c.store AND pr.pid=c.pid
@@ -83,10 +89,12 @@ def rank_movers(conn: sqlite3.Connection, top: int = 50):
     for r in rows:
         if r["prev_rank"] is None:
             movers.append({"store": r["store"], "title": r["title"], "change": None,
-                           "rank": r["cur_rank"], "new_entry": True})
+                           "rank": r["cur_rank"], "new_entry": True,
+                           "image_url": _img(r), "handle": r["handle"]})
         elif r["prev_rank"] > r["cur_rank"]:
             movers.append({"store": r["store"], "title": r["title"],
                            "change": r["prev_rank"] - r["cur_rank"],
-                           "rank": r["cur_rank"], "new_entry": False})
+                           "rank": r["cur_rank"], "new_entry": False,
+                           "prev_rank": r["prev_rank"], "image_url": _img(r), "handle": r["handle"]})
     movers.sort(key=lambda m: (m["change"] is None, -(m["change"] or 0)))
     return movers[:top]

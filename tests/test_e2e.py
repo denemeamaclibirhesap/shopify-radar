@@ -64,5 +64,9 @@ def test_collect_and_report_end_to_end(tmp_path, monkeypatch):
 
     cli.cmd_report(conn, SimpleNamespace(out=str(tmp_path)))
     data = json.loads((tmp_path / "data.json").read_text(encoding="utf-8"))
-    assert data["stats"] == {"stores": 2, "tr_stores": 1, "products": 5}
+    stats = data["stats"]
+    assert (stats["stores"], stats["tr_stores"], stats["products"]) == (2, 1, 5)
+    assert data["generated_at"].endswith("Z") and stats["compare_ready"] is False
+    tr_card = next(s for s in data["new_stores"] if s["domain"] == "a.com.tr")
+    assert tr_card["is_tr"] == 1 and tr_card["images"] == ["https://cdn.test/i.png"]
     assert data["cross_store"], "aynı görsel iki mağazada eşleşmeli"

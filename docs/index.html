@@ -1,42 +1,492 @@
 <!doctype html>
-<html lang="tr">
+<html lang="tr" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
 <title>Shopify Radar</title>
+<meta name="description" content="Yeni açılan Shopify mağazalarını keşfeder, Türkiye odaklı olanları öne çıkarır ve ürün trendlerini izler.">
 <style>
-  body { font: 15px/1.5 system-ui, sans-serif; max-width: 960px; margin: 0 auto; padding: 16px; color: #1a1a1a; background: #fff; }
-  @media (prefers-color-scheme: dark) { body { color: #eee; background: #161616; } th { background: #222; } }
-  h1 { font-size: 22px; } h2 { font-size: 17px; margin-top: 28px; }
-  table { border-collapse: collapse; width: 100%; }
-  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #8884; }
-  th { background: #f2f2f2; } .muted { opacity: .7; font-size: 13px; }
-  .tr { font-weight: 600; }
+  :root {
+    --bg: #09090b;
+    --surface: #111114;
+    --surface-2: #17171b;
+    --line: #26262c;
+    --text: #f4f4f5;
+    --muted: #9b9ba6;
+    --accent: #c4ff4d;
+    --accent-ink: #0b1200;
+    --tr: #e30a17;
+    --tr-ink: #ffffff;
+    --shadow: 0 1px 0 rgba(255,255,255,.04) inset;
+    --radius: 18px;
+  }
+  :root[data-theme="light"] {
+    --bg: #f6f6f3;
+    --surface: #ffffff;
+    --surface-2: #f0f0ec;
+    --line: #dcdcd4;
+    --text: #0d0d10;
+    --muted: #5d5d68;
+    --accent: #1f7a1f;
+    --accent-ink: #ffffff;
+    --tr: #c8000e;
+    --tr-ink: #ffffff;
+    --shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+
+  /* Üst çubuk */
+  .top { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: -.01em; text-decoration: none; }
+  .brand-mark { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--accent); position: relative; }
+  .brand-mark::after { content: ""; position: absolute; inset: 5px; border-radius: 50%; background: var(--accent); }
+  .theme-btn {
+    border: 1px solid var(--line); background: var(--surface); color: var(--text);
+    border-radius: 999px; padding: 8px 14px; font: inherit; font-size: 14px; cursor: pointer;
+  }
+  .theme-btn:hover { border-color: var(--muted); }
+
+  /* Başlık */
+  .hero { padding: 40px 0 28px; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 10px; color: var(--muted); font-size: 14px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 0 var(--accent); animation: pulse 2.2s infinite; }
+  @keyframes pulse { 70% { box-shadow: 0 0 0 10px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+  h1 {
+    margin: 18px 0 0; font-weight: 800; letter-spacing: -.045em; line-height: .98;
+    font-size: clamp(42px, 9vw, 112px);
+  }
+  h1 em { font-style: normal; color: var(--accent); }
+  .lead { max-width: 640px; margin: 22px 0 0; color: var(--muted); font-size: clamp(16px, 2vw, 19px); }
+
+  /* Rakam şeridi */
+  .stats {
+    display: grid; grid-template-columns: repeat(6, 1fr);
+    border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface);
+    box-shadow: var(--shadow); overflow: hidden; margin-top: 36px;
+  }
+  .stat { padding: 22px 20px; border-left: 1px solid var(--line); min-width: 0; }
+  .stat:first-child { border-left: 0; }
+  .stat-num { font-size: clamp(30px, 3.6vw, 46px); font-weight: 800; letter-spacing: -.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .stat-label { margin-top: 10px; color: var(--muted); font-size: 13px; line-height: 1.3; }
+  .stat.hl .stat-num { color: var(--accent); }
+  .stat-hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .updated { margin: 14px 4px 0; color: var(--muted); font-size: 14px; }
+
+  /* Araç çubuğu */
+  .toolbar-wrap { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); margin-top: 34px; border-bottom: 1px solid var(--line); }
+  .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; padding-top: 12px; padding-bottom: 12px; }
+  .search { flex: 1 1 260px; position: relative; }
+  .search input, .select {
+    width: 100%; background: var(--surface); color: var(--text); border: 1px solid var(--line);
+    border-radius: 12px; padding: 11px 14px; font: inherit; font-size: 15px;
+  }
+  .search input::placeholder { color: var(--muted); }
+  .select { width: auto; cursor: pointer; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 8px; cursor: pointer; user-select: none;
+    border: 1px solid var(--line); background: var(--surface); color: var(--text);
+    border-radius: 12px; padding: 11px 14px; font: inherit; font-size: 15px;
+  }
+  .chip[aria-pressed="true"] { background: var(--tr); border-color: var(--tr); color: var(--tr-ink); }
+
+  .tabs { display: inline-flex; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 3px; gap: 2px; }
+  .tab { border: 0; background: transparent; color: var(--muted); font: inherit; font-size: 15px; font-weight: 600; padding: 8px 14px; border-radius: 9px; cursor: pointer; white-space: nowrap; }
+  .tab[aria-selected="true"] { background: var(--text); color: var(--bg); }
+  .tab span { opacity: .65; font-weight: 500; margin-left: 4px; font-variant-numeric: tabular-nums; }
+  .badge.brand { background: var(--surface-2); color: var(--text); border: 1px solid var(--line); }
+
+  /* Bölümler */
+  section { padding: 56px 0 8px; }
+  .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+  h2 { margin: 0; font-size: clamp(26px, 4vw, 40px); font-weight: 800; letter-spacing: -.035em; line-height: 1.05; }
+  .sec-sub { color: var(--muted); font-size: 15px; margin-top: 6px; max-width: 620px; }
+  .count { color: var(--muted); font-size: 14px; font-variant-numeric: tabular-nums; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 14px; }
+  .card {
+    position: relative;
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 14px; display: flex; flex-direction: column; gap: 12px; min-width: 0; box-shadow: var(--shadow);
+    transition: border-color .15s, transform .15s;
+  }
+  .card:hover { border-color: var(--muted); transform: translateY(-2px); }
+  .card.is-tr { border-color: color-mix(in srgb, var(--tr) 55%, var(--line)); }
+  .card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .domain { font-weight: 700; font-size: 16px; letter-spacing: -.01em; text-decoration: none; overflow-wrap: anywhere; }
+  .domain:hover { text-decoration: underline; }
+  .stretch::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius); }   /* kartın her yeri tıklanır */
+  .card a.mini { position: relative; z-index: 1; }
+  .meta { color: var(--muted); font-size: 13px; display: flex; flex-wrap: wrap; gap: 4px 12px; }
+  .badge { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; padding: 4px 8px; border-radius: 999px; white-space: nowrap; }
+  .badge.tr { background: var(--tr); color: var(--tr-ink); }
+  .badge.count-b { background: var(--accent); color: var(--accent-ink); }
+  .badge.up { background: var(--accent); color: var(--accent-ink); }
+  .thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .thumb { aspect-ratio: 1; border-radius: 10px; background: var(--surface-2); overflow: hidden; }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .visit { margin-top: auto; align-self: flex-start; font-size: 14px; font-weight: 600; text-decoration: none; color: var(--accent); }
+  .visit:hover { text-decoration: underline; }
+
+  .pcard { padding: 0; overflow: hidden; }
+  .pimg { aspect-ratio: 1 / 1; background: var(--surface-2); position: relative; }
+  .pimg img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pimg .badge { position: absolute; left: 10px; top: 10px; }
+  .pimg .badge.tr { left: auto; right: 10px; }
+  .pbody { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .ptitle { margin: 0; font-size: 15px; font-weight: 600; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .mini { font-size: 12px; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 3px 9px; text-decoration: none; overflow-wrap: anywhere; }
+  a.mini:hover { color: var(--text); border-color: var(--muted); }
+  .rank-row { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); }
+
+  .empty {
+    border: 1px dashed var(--line); border-radius: var(--radius); padding: 36px 24px;
+    text-align: center; color: var(--muted); background: var(--surface);
+  }
+  .empty strong { display: block; color: var(--text); font-size: 18px; margin-bottom: 6px; }
+  .more { display: block; margin: 22px auto 0; background: var(--surface); color: var(--text); border: 1px solid var(--line); border-radius: 999px; padding: 11px 22px; font: inherit; cursor: pointer; }
+  .more:hover { border-color: var(--muted); }
+  .more[hidden], [hidden] { display: none !important; }
+
+  footer { margin-top: 72px; padding: 28px 0 48px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; display: grid; gap: 6px; }
+
+  @media (max-width: 900px) {
+    .stats { grid-template-columns: repeat(3, 1fr); }
+    .stat:nth-child(4) { border-left: 0; }
+    .stat:nth-child(n+4) { border-top: 1px solid var(--line); }
+  }
+  @media (max-width: 560px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .stat { padding: 18px 16px; }
+    .stat:nth-child(odd) { border-left: 0; }
+    .stat:nth-child(even) { border-left: 1px solid var(--line); }
+    .stat:nth-child(n+3) { border-top: 1px solid var(--line); }
+    .stat:nth-child(4) { border-left: 1px solid var(--line); }
+    .hero { padding-top: 20px; }
+    section { padding-top: 44px; }
+    .grid { grid-template-columns: 1fr; }
+    .search { flex-basis: 100%; }
+    .select, .chip { flex: 1; justify-content: center; }
+    .tabs { width: 100%; }
+    .tab { flex: 1; padding: 9px 8px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .dot { animation: none; } .card { transition: none; } .card:hover { transform: none; } }
 </style>
 </head>
 <body>
-<h1>Shopify Radar</h1>
-<p class="muted" id="meta">Yükleniyor…</p>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="./" aria-label="Shopify Radar ana sayfa"><span class="brand-mark" aria-hidden="true"></span>Shopify Radar</a>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Temayı değiştir">Açık tema</button>
+  </header>
 
-<h2>Yeni keşfedilen mağazalar</h2>
-<table id="stores"><thead><tr><th>Alan adı</th><th>İlk görülme</th><th>Para birimi</th><th>Ürün</th></tr></thead><tbody></tbody></table>
+  <div class="hero">
+    <div class="eyebrow"><span class="dot" aria-hidden="true"></span><span id="eyebrow">Veri yükleniyor…</span></div>
+    <h1>Yeni açılan mağazaları <em>ilk sen</em> gör.</h1>
+    <p class="lead">Her gün yeni açılan Shopify mağazalarını bulur, Türkiye'dekileri öne çıkarır ve hangi ürünlerin yükselişte olduğunu izler.</p>
 
-<h2>Birden fazla mağazada satılan ürünler</h2>
-<table id="cross"><thead><tr><th>Ürün</th><th>Mağaza sayısı</th><th>Örnek mağazalar</th></tr></thead><tbody></tbody></table>
+    <div class="stats" id="stats" aria-live="polite">
+      <div class="stat"><div class="stat-num" data-k="new_24h">–</div><div class="stat-label">Son 24 saatte yeni mağaza</div></div>
+      <div class="stat"><div class="stat-num" data-k="new_7d">–</div><div class="stat-label">Son 7 günde yeni mağaza</div></div>
+      <div class="stat"><div class="stat-num" data-k="stores">–</div><div class="stat-label">Toplam mağaza</div></div>
+      <div class="stat hl"><div class="stat-num" data-k="tr_stores">–</div><div class="stat-label">Türkiye odaklı mağaza</div></div>
+      <div class="stat"><div class="stat-num" data-k="products">–</div><div class="stat-label">Toplam ürün</div></div>
+      <div class="stat"><div class="stat-num" data-k="movers">–</div><div class="stat-label">Sıralamada yükselen ürün</div><div class="stat-hint" id="moversHint"></div></div>
+    </div>
+    <p class="updated" id="updated"></p>
+  </div>
+</div>
 
-<h2>Çok satanlar sıralamasında yükselenler</h2>
-<table id="movers"><thead><tr><th>Ürün</th><th>Mağaza</th><th>Sıra</th><th>Değişim</th></tr></thead><tbody></tbody></table>
+<div class="toolbar-wrap">
+  <div class="wrap toolbar" role="search">
+    <div class="tabs" role="tablist" aria-label="Mağaza türü">
+      <button class="tab" id="tab-new" role="tab" type="button" aria-selected="true">Yeni mağazalar<span id="n-new"></span></button>
+      <button class="tab" id="tab-brand" role="tab" type="button" aria-selected="false">Bilinen markalar<span id="n-brand"></span></button>
+    </div>
+    <label class="search"><span class="sr" hidden>Ara</span>
+      <input id="q" type="search" placeholder="Mağaza veya ürün ara…" autocomplete="off" aria-label="Mağaza veya ürün ara">
+    </label>
+    <button class="chip" id="trOnly" type="button" aria-pressed="false">Sadece Türkiye</button>
+    <select class="select" id="sort" aria-label="Sıralama">
+      <option value="new">Sıralama: En yeni</option>
+      <option value="pop">Sıralama: En çok ürün / mağaza</option>
+      <option value="az">Sıralama: A'dan Z'ye</option>
+    </select>
+  </div>
+</div>
+
+<main class="wrap">
+  <section id="s-stores">
+    <div class="sec-head">
+      <div><h2 id="h-stores">Yeni keşfedilen mağazalar</h2><div class="sec-sub" id="sub-stores">Radarın en son bulduğu mağazalar. Türkiye odaklı olanlar kırmızı rozetle işaretlenir. Karta tıklayınca mağaza yeni sekmede açılır.</div></div>
+      <div class="count" id="c-stores"></div>
+    </div>
+    <div class="grid" id="stores"></div>
+    <button class="more" id="moreStores" type="button" hidden>Daha fazla göster</button>
+  </section>
+
+  <section id="s-cross">
+    <div class="sec-head">
+      <div><h2>Birden fazla mağazada satılan ürünler</h2><div class="sec-sub">Görselleri birbirine benzeyen ürünler. Farklı isimlerle aynı ürünü satan mağazaları gösterir.</div></div>
+      <div class="count" id="c-cross"></div>
+    </div>
+    <div class="grid" id="cross"></div>
+    <button class="more" id="moreCross" type="button" hidden>Daha fazla göster</button>
+  </section>
+
+  <section id="s-movers">
+    <div class="sec-head">
+      <div><h2>Sıralamada yükselen ürünler</h2><div class="sec-sub">Mağazaların herkese açık "çok satanlar" sıralamasında bir önceki taramaya göre yükselen ürünler.</div></div>
+      <div class="count" id="c-movers"></div>
+    </div>
+    <div class="grid" id="movers"></div>
+    <button class="more" id="moreMovers" type="button" hidden>Daha fazla göster</button>
+  </section>
+
+  <footer>
+    <div id="note"></div>
+    <div>Yalnızca herkese açık mağaza ve ürün bilgileri kullanılır. Kişisel veri toplanmaz; istekler yavaş ve nazik şekilde yapılır.</div>
+  </footer>
+</main>
 
 <script>
-const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const add = (id, rows) => { document.querySelector("#" + id + " tbody").innerHTML = rows.join(""); };
-fetch("data.json").then(r => r.json()).then(d => {
-  document.getElementById("meta").textContent =
-    `${d.stats.stores} mağaza (${d.stats.tr_stores} Türkiye odaklı), ${d.stats.products} ürün. Güncelleme: ${d.generated}. ${d.note}`;
-  add("stores", d.new_stores.map(s => `<tr><td class="${s.is_tr ? "tr" : ""}">${esc(s.domain)}</td><td>${esc(s.first_seen)}</td><td>${esc(s.currency || "-")}</td><td>${s.product_count}</td></tr>`));
-  add("cross", d.cross_store.map(g => `<tr><td>${esc(g.title)}</td><td>${g.stores}</td><td>${g.listings.slice(0, 3).map(l => esc(l.store)).join(", ")}</td></tr>`));
-  add("movers", d.movers.map(m => `<tr><td>${esc(m.title)}</td><td>${esc(m.store)}</td><td>${m.rank}</td><td>${m.new_entry ? "yeni" : "+" + m.change}</td></tr>`));
-}).catch(() => { document.getElementById("meta").textContent = "Henüz veri yok. İlk tarama bittikten sonra burada görünecek."; });
+(function () {
+  "use strict";
+  var $ = function (s) { return document.querySelector(s); };
+  var esc = function (s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  };
+  var nf = new Intl.NumberFormat("tr-TR");
+  var PAGE = 24;
+  var state = { q: "", trOnly: false, sort: "new", tab: "new", shown: { stores: PAGE, cross: PAGE, movers: PAGE } };
+  var data = null, brandSet = {};
+  var TEXT = {
+    new: ["Yeni keşfedilen mağazalar", "Radarın en son bulduğu bağımsız mağazalar. Türkiye odaklı olanlar kırmızı rozetle işaretlenir. Karta tıklayınca mağaza yeni sekmede açılır."],
+    brand: ["Bilinen markalar", "Zaten tanınan markaların Shopify mağazaları. Yeni ve bağımsız mağazalardan ayrı tutulur. Karta tıklayınca mağaza yeni sekmede açılır."]
+  };
+  function isBrand(domain) { return !!brandSet[domain]; }
+  function inTab(isB) { return state.tab === "brand" ? isB : !isB; }
+
+  // ---- Tema ----
+  var root = document.documentElement, btn = $("#themeBtn");
+  function applyTheme(t) {
+    root.setAttribute("data-theme", t);
+    btn.textContent = t === "dark" ? "Açık tema" : "Koyu tema";
+  }
+  var saved = null;
+  try { saved = localStorage.getItem("radar-theme"); } catch (e) {}
+  applyTheme(saved === "light" ? "light" : "dark");
+  btn.addEventListener("click", function () {
+    var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    applyTheme(next);
+    try { localStorage.setItem("radar-theme", next); } catch (e) {}
+  });
+
+  // ---- Yardımcılar ----
+  var DOMAIN_OK = /^[a-z0-9.-]+$/i;
+  function storeUrl(d) { return DOMAIN_OK.test(d) ? "https://" + d : "#"; }
+  function thumb(url, w) {
+    if (!/^https:\/\//.test(url || "")) return "";
+    return /cdn\.shopify\.com/.test(url) ? url + "?width=" + w : url;
+  }
+  function img(url, w, alt) {
+    var u = thumb(url, w);
+    if (!u) return "";
+    return '<img loading="lazy" decoding="async" referrerpolicy="no-referrer" alt="' + esc(alt || "") +
+      '" src="' + esc(u) + '" onerror="this.remove()">';
+  }
+  function seenDate(s) {
+    var d = new Date(s.length <= 10 ? s + "T00:00:00Z" : s + (/Z$/.test(s) ? "" : "Z"));
+    return isNaN(d) ? 0 : d.getTime();
+  }
+  function ago(ms) {
+    var m = Math.max(0, Math.round((Date.now() - ms) / 60000));
+    if (m < 1) return "az önce";
+    if (m < 60) return m + " dakika önce";
+    var h = Math.round(m / 60);
+    if (h < 24) return h + " saat önce";
+    var d = Math.round(h / 24);
+    return d + " gün önce";
+  }
+  function seenLabel(s) {
+    if (s.length > 10) return ago(seenDate(s));
+    var days = Math.round((Date.now() - seenDate(s)) / 86400000);
+    return days <= 0 ? "Bugün" : days === 1 ? "Dün" : days + " gün önce";
+  }
+  function matches(text) { return !state.q || text.toLowerCase().indexOf(state.q) !== -1; }
+
+  // ---- Üst bilgi ----
+  function renderHeader() {
+    var s = data.stats;
+    document.querySelectorAll(".stat-num").forEach(function (el) {
+      var k = el.getAttribute("data-k"), v = s[k];
+      el.textContent = (k === "movers" && !s.compare_ready) ? "—" : nf.format(v || 0);
+    });
+    $("#moversHint").textContent = s.compare_ready ? "" : "ikinci taramadan sonra";
+    $("#note").textContent = data.note || "";
+    var nb = s.brands || 0;
+    $("#n-new").textContent = nf.format(Math.max(0, (s.stores || 0) - nb));
+    $("#n-brand").textContent = nf.format(nb);
+    tickUpdated();
+  }
+  function tickUpdated() {
+    if (!data) return;
+    var t = data.generated_at ? Date.parse(data.generated_at) : seenDate(data.generated);
+    var txt = "Son tarama: " + ago(t);
+    $("#updated").textContent = txt;
+    $("#eyebrow").textContent = "Canlı radar · " + txt;
+  }
+  setInterval(tickUpdated, 30000);
+
+  // ---- Bölümler ----
+  function sorter(kind) {
+    return function (a, b) {
+      if (state.sort === "az") return String(a.name).localeCompare(String(b.name), "tr");
+      if (state.sort === "pop") return (b.pop || 0) - (a.pop || 0);
+      return (b.order || 0) - (a.order || 0);
+    };
+  }
+  function section(id, items, renderCard, emptyHtml) {
+    var box = $("#" + id), more = $("#more" + id.charAt(0).toUpperCase() + id.slice(1));
+    var shown = state.shown[id];
+    $("#c-" + id).textContent = items.length ? nf.format(items.length) + " sonuç" : "";
+    if (!items.length) { box.innerHTML = emptyHtml; more.hidden = true; return; }
+    box.innerHTML = items.slice(0, shown).map(renderCard).join("");
+    more.hidden = items.length <= shown;
+  }
+  function emptyBox(title, text) { return '<div class="empty" style="grid-column:1/-1"><strong>' + esc(title) + "</strong>" + esc(text) + "</div>"; }
+  var filtered = function () { return state.q || state.trOnly; };
+
+  function renderStores() {
+    var items = data.new_stores.map(function (s, i) {
+      return { s: s, name: s.domain, pop: s.product_count || 0, order: seenDate(s.first_seen) * 1000 + (data.new_stores.length - i) };
+    }).filter(function (x) {
+      return inTab(isBrand(x.s.domain)) && (!state.trOnly || x.s.is_tr) && matches(x.s.domain);
+    }).sort(sorter());
+    section("stores", items, function (x) {
+      var s = x.s, tr = s.is_tr;
+      return '<article class="card' + (tr ? " is-tr" : "") + '">' +
+        '<div class="card-head"><a class="domain stretch" target="_blank" rel="noopener noreferrer" href="' + esc(storeUrl(s.domain)) + '">' + esc(s.domain) + "</a>" +
+        (tr ? '<span class="badge tr">Türkiye</span>' : (s.is_brand ? '<span class="badge brand">Marka</span>' : "")) + "</div>" +
+        '<div class="meta"><span>' + esc(seenLabel(s.first_seen)) + "</span><span>" + nf.format(s.product_count || 0) + " ürün</span>" +
+        (s.currency ? "<span>" + esc(s.currency) + "</span>" : "") + "</div>" +
+        '<div class="thumbs">' + [0, 1, 2].map(function (i) {
+          return '<div class="thumb">' + img(s.images && s.images[i], 240, s.domain + " ürünü") + "</div>";
+        }).join("") + "</div>" +
+        '<span class="visit">Mağazaya git →</span></article>';
+    }, emptyBox("Eşleşen mağaza yok", filtered() ? "Aramayı veya filtreyi değiştirmeyi dene." : "İlk tarama bittikten sonra mağazalar burada görünecek."));
+  }
+
+  function renderCross() {
+    var items = data.cross_store.map(function (g, i) {
+      return { g: g, name: g.title, pop: g.stores, order: data.cross_store.length - i };
+    }).filter(function (x) {
+      return inTab(!!x.g.brand_only) && (!state.trOnly || x.g.has_tr) && matches(x.g.title + " " + x.g.store_names.join(" "));
+    }).sort(sorter());
+    section("cross", items, function (x) {
+      var g = x.g, extra = g.stores - g.store_names.length;
+      return '<article class="card pcard"><div class="pimg">' + img(g.image_url, 480, g.title) +
+        '<span class="badge count-b">' + g.stores + " mağazada</span>" + (g.has_tr ? '<span class="badge tr">Türkiye</span>' : "") + "</div>" +
+        '<div class="pbody"><h3 class="ptitle"><a class="stretch" target="_blank" rel="noopener noreferrer" href="' + esc(storeUrl(g.store_names[0])) + '">' + esc(g.title) + '</a></h3><div class="chips">' +
+        g.store_names.slice(0, 4).map(function (n) { return '<a class="mini" target="_blank" rel="noopener noreferrer" href="' + esc(storeUrl(n)) + '">' + esc(n) + "</a>"; }).join("") +
+        (extra > 0 ? '<span class="mini">+' + (extra + Math.max(0, g.store_names.length - 4)) + " mağaza</span>" : (g.store_names.length > 4 ? '<span class="mini">+' + (g.store_names.length - 4) + "</span>" : "")) +
+        "</div></div></article>";
+    }, emptyBox("Eşleşen ürün yok", filtered() ? "Aramayı veya filtreyi değiştirmeyi dene." : "Ortak ürünler, görseller karşılaştırıldıkça burada görünecek."));
+  }
+
+  function renderMovers() {
+    var s = data.stats;
+    if (!s.compare_ready || !data.movers.length) {
+      $("#c-movers").textContent = "";
+      $("#movers").innerHTML = emptyBox("Henüz karşılaştıracak veri yok",
+        s.compare_ready ? "Son iki taramada sıralaması yükselen ürün bulunamadı." :
+        "Sıralamalar farklı günlerdeki iki taramayı karşılaştırır. Bir sonraki günün taramasından sonra burası dolacak.");
+      $("#moreMovers").hidden = true;
+      return;
+    }
+    var trSet = {};
+    data.new_stores.forEach(function (x) { if (x.is_tr) trSet[x.domain] = 1; });
+    var items = data.movers.map(function (m, i) {
+      return { m: m, name: m.title || "", pop: m.change == null ? 0 : m.change, order: data.movers.length - i };
+    }).filter(function (x) {
+      return inTab(isBrand(x.m.store)) && (!state.trOnly || trSet[x.m.store]) && matches((x.m.title || "") + " " + x.m.store);
+    }).sort(sorter());
+    section("movers", items, function (x) {
+      var m = x.m, link = m.handle ? storeUrl(m.store) + "/products/" + encodeURIComponent(m.handle) : storeUrl(m.store);
+      return '<article class="card pcard"><div class="pimg">' + img(m.image_url, 480, m.title) +
+        '<span class="badge up">' + (m.new_entry ? "Yeni giriş" : "▲ " + m.change) + "</span>" + (trSet[m.store] ? '<span class="badge tr">Türkiye</span>' : "") + "</div>" +
+        '<div class="pbody"><h3 class="ptitle"><a class="stretch" target="_blank" rel="noopener noreferrer" href="' + esc(link) + '">' + esc(m.title || "Adsız ürün") + '</a></h3>' +
+        '<div class="rank-row"><span>Sıra #' + m.rank + (m.prev_rank ? " (önce #" + m.prev_rank + ")" : "") + '</span></div>' +
+        '<div class="chips"><a class="mini" target="_blank" rel="noopener noreferrer" href="' + esc(link) + '">' + esc(m.store) + "</a></div></div></article>";
+    }, emptyBox("Eşleşen ürün yok", "Aramayı veya filtreyi değiştirmeyi dene."));
+  }
+
+  function renderAll() { renderStores(); renderCross(); renderMovers(); }
+
+  // ---- Olaylar ----
+  function resetShown() { state.shown = { stores: PAGE, cross: PAGE, movers: PAGE }; }
+  var timer;
+  $("#q").addEventListener("input", function (e) {
+    clearTimeout(timer);
+    timer = setTimeout(function () { state.q = e.target.value.trim().toLowerCase(); resetShown(); renderAll(); }, 120);
+  });
+  $("#trOnly").addEventListener("click", function () {
+    state.trOnly = !state.trOnly;
+    this.setAttribute("aria-pressed", String(state.trOnly));
+    resetShown(); renderAll();
+  });
+  function setTab(t, push) {
+    state.tab = t === "brand" ? "brand" : "new";
+    $("#tab-new").setAttribute("aria-selected", String(state.tab === "new"));
+    $("#tab-brand").setAttribute("aria-selected", String(state.tab === "brand"));
+    $("#h-stores").textContent = TEXT[state.tab][0];
+    $("#sub-stores").textContent = TEXT[state.tab][1];
+    if (push) { try { history.replaceState(null, "", state.tab === "brand" ? "#markalar" : location.pathname + location.search); } catch (e) {} }
+    resetShown(); if (data) renderAll();
+  }
+  $("#tab-new").addEventListener("click", function () { setTab("new", true); });
+  $("#tab-brand").addEventListener("click", function () { setTab("brand", true); });
+  $("#sort").addEventListener("change", function (e) { state.sort = e.target.value; resetShown(); renderAll(); });
+  ["Stores", "Cross", "Movers"].forEach(function (n) {
+    $("#more" + n).addEventListener("click", function () { state.shown[n.toLowerCase()] += PAGE; renderAll(); });
+  });
+
+  fetch("data.json", { cache: "no-cache" }).then(function (r) {
+    if (!r.ok) throw new Error("veri yok");
+    return r.json();
+  }).then(function (d) {
+    d.stats = d.stats || {};
+    d.new_stores = d.new_stores || [];
+    d.movers = d.movers || [];
+    d.cross_store = (d.cross_store || []).map(function (g) {   // eski veri biçimine karşı koruma
+      if (!g.store_names) {
+        var seen = {};
+        g.store_names = (g.listings || []).map(function (l) { return l.store; }).filter(function (n) { return !seen[n] && (seen[n] = 1); });
+      }
+      return g;
+    });
+    (d.brand_domains || []).forEach(function (b) { brandSet[b] = 1; });
+    d.new_stores.forEach(function (x) { if (x.is_brand) brandSet[x.domain] = 1; });
+    data = d; renderHeader(); setTab(location.hash === "#markalar" ? "brand" : "new", false);
+  }).catch(function (err) {
+    if (window.console) console.error("radar:", err);
+    $("#eyebrow").textContent = "Henüz veri yok";
+    $("#updated").textContent = "İlk tarama bittikten sonra burada görünecek.";
+    $("#stores").innerHTML = emptyBox("Henüz veri yok", "İlk tarama bittikten sonra mağazalar burada görünecek.");
+  });
+})();
 </script>
 </body>
 </html>

@@ -9,7 +9,7 @@ from pathlib import Path
 import httpx
 
 from . import collect as C
-from . import detect, sources, trends
+from . import detect, report, sources
 from .db import connect
 
 CHUNK = 5000  # her turdan sonra kaydedilir, süre dolarsa o ana kadarki iş kaybolmaz
@@ -27,7 +27,7 @@ def new_client() -> httpx.AsyncClient:
 
 def majestic_due(conn, force: bool) -> bool:
     """Büyük liste haftada bir indirilir (adaylar zaten kayıtlı olduğundan her gün gerekmez)."""
-    if force:
+    if force or conn.execute("SELECT 1 FROM established LIMIT 1").fetchone() is None:
         return True
     row = conn.execute("SELECT value FROM meta WHERE key='majestic_last'").fetchone()
     return not row or (dt.date.today() - dt.date.fromisoformat(row[0])).days >= 7
@@ -48,6 +48,7 @@ async def gather_domains(conn, client, args) -> list[str]:
             tr = await sources.fetch_majestic_tr(client)
             print(f"Majestic: {len(tr)} .tr alan adı")
             domains += tr
+            conn.executemany("INSERT OR IGNORE INTO established VALUES (?)", [(d,) for d in tr])
             conn.execute("INSERT OR REPLACE INTO meta VALUES ('majestic_last', ?)", (today(),))
             conn.commit()
         except Exception as e:  # noqa: BLE001
@@ -68,6 +69,7 @@ async def cmd_discover(conn, args):
         n_tr = sum(d.endswith(".tr") for d in todo)
         print(f"{len(domains)} domain okundu, {len(todo)} tanesi taranacak ({n_tr} tanesi .tr)")
         now, found, done, start = today(), 0, 0, time.monotonic()
+        stamp = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M")  # "son 24 saat" için dakika hassasiyeti
         for i in range(0, len(todo), CHUNK):
             if time.monotonic() - start > args.time_budget:
                 print(f"süre doldu: {done}/{len(todo)} taranabildi, kalanı sonraki taramaya")
@@ -78,7 +80,7 @@ async def cmd_discover(conn, args):
                 if is_shop:
                     found += 1
                     conn.execute("INSERT OR IGNORE INTO stores(domain, first_seen, is_tr) VALUES (?,?,?)",
-                                 (d, now, int(d.endswith(".tr"))))
+                                 (d, stamp, int(d.endswith(".tr"))))
             conn.commit()
             done += len(results)
     print(f"{found} yeni Shopify mağazası bulundu")
@@ -146,21 +148,9 @@ async def cmd_collect(conn, args):
 def cmd_report(conn, args):
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
-    total = conn.execute("SELECT COUNT(*) FROM stores").fetchone()[0]
-    total_tr = conn.execute("SELECT COUNT(*) FROM stores WHERE is_tr=1").fetchone()[0]
-    prods = conn.execute("SELECT COUNT(*) FROM products").fetchone()[0]
-    new_stores = [dict(r) for r in conn.execute(
-        "SELECT domain, first_seen, currency, is_tr, product_count FROM stores "
-        "ORDER BY first_seen DESC, is_tr DESC LIMIT 100")]
-    data = {
-        "generated": today(),
-        "stats": {"stores": total, "tr_stores": total_tr, "products": prods},
-        "new_stores": new_stores,
-        "cross_store": trends.cross_store_groups(conn)[:100],
-        "movers": trends.rank_movers(conn),
-        "note": "Sıralamalar herkese açık 'çok satanlar' sayfalarından gelir; gerçek satış adedi değildir.",
-    }
-    (out / "data.json").write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+    data = report.build_report(conn)
+    (out / "data.json").write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")),
+                                   encoding="utf-8")
     print(f"rapor yazıldı: {out / 'data.json'}")
 
 

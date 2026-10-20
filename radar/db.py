@@ -35,6 +35,9 @@ CREATE TABLE IF NOT EXISTS rankings (
     rank INTEGER NOT NULL,
     PRIMARY KEY (scan_date, store, pid)
 );
+CREATE TABLE IF NOT EXISTS established (
+    domain TEXT PRIMARY KEY
+);
 CREATE TABLE IF NOT EXISTS meta (
     key TEXT PRIMARY KEY,
     value TEXT

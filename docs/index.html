@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shopify Radar</title>
+<style>
+  body { font: 15px/1.5 system-ui, sans-serif; max-width: 960px; margin: 0 auto; padding: 16px; color: #1a1a1a; background: #fff; }
+  @media (prefers-color-scheme: dark) { body { color: #eee; background: #161616; } th { background: #222; } }
+  h1 { font-size: 22px; } h2 { font-size: 17px; margin-top: 28px; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #8884; }
+  th { background: #f2f2f2; } .muted { opacity: .7; font-size: 13px; }
+  .tr { font-weight: 600; }
+</style>
+</head>
+<body>
+<h1>Shopify Radar</h1>
+<p class="muted" id="meta">Yükleniyor…</p>
+
+<h2>Yeni keşfedilen mağazalar</h2>
+<table id="stores"><thead><tr><th>Alan adı</th><th>İlk görülme</th><th>Para birimi</th><th>Ürün</th></tr></thead><tbody></tbody></table>
+
+<h2>Birden fazla mağazada satılan ürünler</h2>
+<table id="cross"><thead><tr><th>Ürün</th><th>Mağaza sayısı</th><th>Örnek mağazalar</th></tr></thead><tbody></tbody></table>
+
+<h2>Çok satanlar sıralamasında yükselenler</h2>
+<table id="movers"><thead><tr><th>Ürün</th><th>Mağaza</th><th>Sıra</th><th>Değişim</th></tr></thead><tbody></tbody></table>
+
+<script>
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const add = (id, rows) => { document.querySelector("#" + id + " tbody").innerHTML = rows.join(""); };
+fetch("data.json").then(r => r.json()).then(d => {
+  document.getElementById("meta").textContent =
+    `${d.stats.stores} mağaza (${d.stats.tr_stores} Türkiye odaklı), ${d.stats.products} ürün. Güncelleme: ${d.generated}. ${d.note}`;
+  add("stores", d.new_stores.map(s => `<tr><td class="${s.is_tr ? "tr" : ""}">${esc(s.domain)}</td><td>${esc(s.first_seen)}</td><td>${esc(s.currency || "-")}</td><td>${s.product_count}</td></tr>`));
+  add("cross", d.cross_store.map(g => `<tr><td>${esc(g.title)}</td><td>${g.stores}</td><td>${g.listings.slice(0, 3).map(l => esc(l.store)).join(", ")}</td></tr>`));
+  add("movers", d.movers.map(m => `<tr><td>${esc(m.title)}</td><td>${esc(m.store)}</td><td>${m.rank}</td><td>${m.new_entry ? "yeni" : "+" + m.change}</td></tr>`));
+}).catch(() => { document.getElementById("meta").textContent = "Henüz veri yok. İlk tarama bittikten sonra burada görünecek."; });
+</script>
+</body>
+</html>

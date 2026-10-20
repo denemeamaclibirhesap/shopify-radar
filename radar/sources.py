@@ -10,6 +10,7 @@ import base64
 import datetime as dt
 import io
 import re
+import time
 import zipfile
 from pathlib import Path
 
@@ -76,26 +77,39 @@ def looks_turkish_domain(domain: str) -> bool:
     return any(c in TR_LETTERS for c in name) or any(h in name for h in TR_HINTS)
 
 
-async def fetch_crtsh(client: httpx.AsyncClient, suffixes=TR_SUFFIXES, days: int = 3,
-                      delay: float = 15.0, timeout: float = 90.0) -> list[str]:
+CRT_WORDS = TR_HINTS + ("shop", "store", "market", "online", "tekstil", "elektronik", "organik")
+CRT_PATTERNS = tuple(f"%{w}%.com.tr" for w in CRT_WORDS)
+
+
+async def fetch_crtsh(client: httpx.AsyncClient, patterns=CRT_PATTERNS, days: int = 3,
+                      delay: float = 12.0, timeout: float = 40.0, deadline: float = 300.0) -> list[str]:
     """crt.sh'den son `days` günde sertifika almış .tr alan adları.
 
-    crt.sh dakikada ~5 istek sever ve bazen hata verir: hata olursa o uzantı atlanır.
+    Tüm .com.tr'yi tek seferde istemek crt.sh'yi çökertiyor; bu yüzden Türkçe mağaza
+    kelimeleriyle küçük sorgulara bölünür (crt.sh'de % her yerde joker olabilir).
+    crt.sh dakikada ~5 istek sever: istekler arası bekleme var, hata olan sorgu atlanır,
+    toplam süre `deadline` saniyeyi aşmaz.
     """
     cutoff = (dt.date.today() - dt.timedelta(days=days)).isoformat()
+    start = time.monotonic()
     found: list[str] = []
-    for i, suffix in enumerate(suffixes):
+    ok = failed = 0
+    for i, pattern in enumerate(patterns):
+        if time.monotonic() - start > deadline:
+            print(f"crt.sh süre sınırı doldu: {i}/{len(patterns)} sorgu yapıldı")
+            break
         if i:
             await asyncio.sleep(delay)
         try:
             r = await client.get("https://crt.sh/", timeout=timeout,
-                                 params={"q": f"%.{suffix}", "output": "json", "exclude": "expired"})
+                                 params={"q": pattern, "output": "json", "exclude": "expired"})
             r.raise_for_status()
             rows = r.json()
         except (httpx.HTTPError, ValueError) as e:
-            print(f"crt.sh .{suffix} atlandı: {type(e).__name__}")
+            failed += 1
+            print(f"crt.sh {pattern} atlandı: {type(e).__name__}")
             continue
-        n = 0
+        ok += 1
         for row in rows:
             if str(row.get("not_before", ""))[:10] < cutoff:
                 continue
@@ -103,9 +117,9 @@ async def fetch_crtsh(client: httpx.AsyncClient, suffixes=TR_SUFFIXES, days: int
                 name = name.strip().lower().lstrip("*.")
                 if name.endswith(".tr") and "@" not in name:
                     found.append(registrable_tr(name))
-                    n += 1
-        print(f"crt.sh .{suffix}: {n} yeni sertifika kaydı")
-    return parse_domains("\n".join(dict.fromkeys(found)))
+    domains = parse_domains("\n".join(dict.fromkeys(found)))
+    print(f"crt.sh: {ok} sorgu başarılı, {failed} başarısız, {len(domains)} .tr alan adı")
+    return domains
 
 
 def prioritize(domains: list[str]) -> list[str]:

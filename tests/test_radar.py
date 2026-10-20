@@ -162,7 +162,7 @@ def test_fetch_crtsh_filters_and_survives_errors(monkeypatch):
 
     def handler(req):
         q = req.url.params["q"]
-        if q == "%.com.tr":
+        if q == "%moda%.com.tr":
             return httpx.Response(200, json=[
                 {"not_before": today + "T01:00:00", "name_value": "www.yeni.com.tr\n*.yeni.com.tr"},
                 {"not_before": "2001-01-01T00:00:00", "name_value": "eski.com.tr"}])
@@ -170,7 +170,7 @@ def test_fetch_crtsh_filters_and_survives_errors(monkeypatch):
 
     async def go():
         async with client_for(handler) as c:
-            return await sources.fetch_crtsh(c, suffixes=("com.tr", "net.tr"), delay=0)
+            return await sources.fetch_crtsh(c, patterns=("%moda%.com.tr", "%butik%.com.tr"), delay=0)
     assert run(go()) == ["yeni.com.tr"]
 
 

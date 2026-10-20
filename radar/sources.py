@@ -141,6 +141,49 @@ async def fetch_crtsh(client: httpx.AsyncClient, patterns=CRT_PATTERNS, days: in
     return domains
 
 
+CRUX_URL = ("https://raw.githubusercontent.com/InternetHealthReport/crux-top-lists-country/main/"
+            "data/country/{cc}/{ym}.csv.gz")
+SECOND_LEVEL_CC = {"co", "com", "org", "net", "gov", "ac", "edu"}
+
+
+def registrable(host: str) -> str:
+    """www.shop.example.com -> example.com; x.example.co.uk -> example.co.uk; x.y.com.tr -> y.com.tr."""
+    host = host.lower().strip(".")
+    if host.endswith(".tr"):
+        return registrable_tr(host)
+    parts = host.split(".")
+    if host.startswith("www."):
+        parts = parts[1:]
+    if len(parts) >= 3 and len(parts[-1]) == 2 and parts[-2] in SECOND_LEVEL_CC:
+        return ".".join(parts[-3:])
+    return ".".join(parts[-2:])
+
+
+async def fetch_crux(client: httpx.AsyncClient, country: str = "tr") -> list[str]:
+    """CrUX (Chrome kullanıcı verisi) ülke listesi: o ülkede en çok ziyaret edilen ~1M site.
+
+    Kaynak: InternetHealthReport/crux-top-lists-country (aylık, ücretsiz). Son 4 ayı sırayla dener.
+    """
+    import gzip
+    from urllib.parse import urlsplit
+    today = dt.date.today()
+    for back in range(4):
+        y, m = today.year, today.month - back
+        while m <= 0:
+            y, m = y - 1, m + 12
+        r = await client.get(CRUX_URL.format(cc=country, ym=f"{y}{m:02d}"), timeout=120)
+        if r.status_code != 200:
+            continue
+        out: dict[str, None] = {}
+        for line in gzip.decompress(r.content).decode("utf-8", "ignore").splitlines()[1:]:
+            origin = line.rsplit(",", 1)[0]
+            host = urlsplit(origin).hostname
+            if host and "." in host:
+                out[registrable(host)] = None
+        return parse_domains("\n".join(out))
+    return []
+
+
 CC_COLLINFO = "https://index.commoncrawl.org/collinfo.json"
 
 

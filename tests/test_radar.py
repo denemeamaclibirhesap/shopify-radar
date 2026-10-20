@@ -246,7 +246,7 @@ def test_discover_records_upcoming_and_backfills(monkeypatch, tmp_path):
         return {d: ("upcoming" if d == "eski.com.tr" else "open" if d == "yeni.com" else None) for d in domains}
     monkeypatch.setattr(cli.detect, "check_domains", fake_check)
     f = tmp_path / "d.txt"; f.write_text("yeni.com\n")
-    args = SimpleNamespace(file=str(f), limit=100, time_budget=60, no_majestic=True, force_majestic=False, crtsh=False, no_cc=True, cc_pages=1)
+    args = SimpleNamespace(file=str(f), limit=100, time_budget=60, no_majestic=True, force_majestic=False, crtsh=False, no_cc=True, no_crux=True, cc_pages=1)
     run(cli.cmd_discover(conn, args))
     assert conn.execute("SELECT status FROM stores WHERE domain='yeni.com'").fetchone()[0] == "open"
     assert conn.execute("SELECT COUNT(*) FROM stores WHERE domain='eski.com.tr'").fetchone()[0] == 0  # --file: geri tarama yok
@@ -302,3 +302,20 @@ def test_dns_class_shopify_cloudflare_none():
     r = FakeResolver()
     got = [run(detect.dns_class(d, r)) for d in ("s.example", "cf.example", "cf2.example", "other.example", "yok.example")]
     assert got == ["shopify", "cloudflare", "cloudflare", None, None]
+
+
+def test_registrable_and_crux(monkeypatch):
+    import gzip
+    assert sources.registrable("www.magaza.com") == "magaza.com"
+    assert sources.registrable("shop.example.co.uk") == "example.co.uk"
+    assert sources.registrable("a.b.com.tr") == "b.com.tr"
+    csv = "origin,rank\nhttps://www.butik.com,1000\nhttps://butik.com,10000\nhttps://x.y.com.tr,100000\nhttp://localhost,1000\n"
+    blob = gzip.compress(csv.encode())
+
+    def handler(req):
+        return httpx.Response(200, content=blob) if req.url.path.endswith(".csv.gz") else httpx.Response(404)
+
+    async def go():
+        async with client_for(handler) as c:
+            return await sources.fetch_crux(c)
+    assert run(go()) == ["butik.com", "y.com.tr"]

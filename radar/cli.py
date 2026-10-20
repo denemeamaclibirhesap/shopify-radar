@@ -54,6 +54,13 @@ async def gather_domains(conn, client, args) -> list[str]:
             conn.commit()
         except Exception as e:  # noqa: BLE001
             print(f"Majestic atlandı: {type(e).__name__}")
+    if not args.no_crux:
+        try:
+            crux = await sources.fetch_crux(client)
+            print(f"CrUX Türkiye: {len(crux)} alan adı")
+            domains += crux
+        except Exception as e:  # noqa: BLE001
+            print(f"CrUX atlandı: {type(e).__name__}")
     if not args.no_cc:
         try:
             row = conn.execute("SELECT value FROM meta WHERE key='cc_cursor'").fetchone()
@@ -194,6 +201,7 @@ def main():
     d.add_argument("--time-budget", type=int, default=700, help="keşif için saniye")
     d.add_argument("--crtsh", action="store_true", help="crt.sh kaynağını da dene")
     d.add_argument("--no-majestic", action="store_true")
+    d.add_argument("--no-crux", action="store_true", help="CrUX Türkiye listesini atla")
     d.add_argument("--no-cc", action="store_true", help="Common Crawl kaynağını atla")
     d.add_argument("--cc-pages", type=int, default=20, help="her taramada okunacak Common Crawl sayfası")
     d.add_argument("--force-majestic", action="store_true")
@@ -208,6 +216,7 @@ def main():
     run.add_argument("--time-budget", type=int, default=700, help="keşif için saniye")
     run.add_argument("--crtsh", action="store_true", help="crt.sh kaynağını da dene")
     run.add_argument("--no-majestic", action="store_true")
+    run.add_argument("--no-crux", action="store_true", help="CrUX Türkiye listesini atla")
     run.add_argument("--no-cc", action="store_true", help="Common Crawl kaynağını atla")
     run.add_argument("--cc-pages", type=int, default=20, help="her taramada okunacak Common Crawl sayfası")
     run.add_argument("--force-majestic", action="store_true")

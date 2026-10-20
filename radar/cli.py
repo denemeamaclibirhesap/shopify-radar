@@ -1,5 +1,6 @@
 """Komut satırı: python -m radar.cli discover | collect | report | run"""
 import argparse
+import collections
 import asyncio
 import datetime as dt
 import json
@@ -87,7 +88,7 @@ async def cmd_discover(conn, args):
         print(f"{len(domains)} domain okundu, {len(todo)} tanesi taranacak ({n_tr} tanesi .tr)")
         now, done, start = today(), 0, time.monotonic()
         counts = {"open": 0, "upcoming": 0, "open_tr": 0, "upcoming_tr": 0}
-        funnel = {"shopify": 0, "cloudflare": 0}
+        funnel = {"shopify": 0, "cloudflare": 0, "reasons": collections.Counter()}
         stamp = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M")  # "son 24 saat" için dakika hassasiyeti
         for i in range(0, len(todo), CHUNK):
             if time.monotonic() - start > args.time_budget:
@@ -108,6 +109,7 @@ async def cmd_discover(conn, args):
           f"{counts['open']} açık mağaza ({counts['open_tr']} .tr), "
           f"{counts['upcoming']} açılmak üzere ({counts['upcoming_tr']} .tr), "
           f"{funnel['shopify'] + funnel['cloudflare'] - counts['open'] - counts['upcoming']} doğrulanamadı")
+    print(f"doğrulanamama nedenleri: {dict(funnel['reasons'].most_common(10))}")
     print(f"{counts['open'] + counts['upcoming']} yeni Shopify mağazası bulundu")
 
 

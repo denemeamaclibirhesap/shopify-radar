@@ -72,8 +72,24 @@ def is_password_page(r: httpx.Response) -> bool:
     return 'action="/password"' in r.text[:300000]
 
 
-async def shopify_status(client: httpx.AsyncClient, domain: str) -> str | None:
-    """'open' (ürün listesi açık), 'upcoming' (şifreli / henüz yayında değil) ya da None."""
+def _why(r: httpx.Response, domain: str) -> str:
+    """Doğrulanamayan site neden Shopify mağazası sayılmadı? (tanı amaçlı kısa etiket)"""
+    if r.url.host and r.url.host.removeprefix("www.") != domain.removeprefix("www."):
+        return "baska-alana-yonlendi"
+    if r.status_code != 200:
+        return f"http{r.status_code}"
+    text = r.text[:200000].lower()
+    if "currently unavailable" in text or "sorry, this shop" in text:
+        return "magaza-kapali"
+    return "200-html-shopify" if "shopify" in text else "200-html"
+
+
+async def shopify_status(client: httpx.AsyncClient, domain: str, reasons=None) -> str | None:
+    """'open' (ürün listesi açık), 'upcoming' (şifreli / henüz yayında değil) ya da None.
+
+    `reasons` (Counter) verilirse doğrulanamama nedenleri sayılır.
+    """
+    why = "hata"
     try:
         r = await client.get(f"https://{domain}/products.json", params={"limit": 1})
         if r.status_code == 200:
@@ -83,12 +99,15 @@ async def shopify_status(client: httpx.AsyncClient, domain: str) -> str | None:
                     return "open"
             except ValueError:
                 pass
-            if is_password_page(r):
-                return "upcoming"
-        elif r.status_code in (401, 403) and is_password_page(r):
+        if is_password_page(r):
             return "upcoming"
-    except httpx.HTTPError:
-        pass
+        why = _why(r, domain)
+    except httpx.TimeoutException:
+        why = "zaman-asimi"
+    except httpx.HTTPError as e:
+        why = type(e).__name__
+    if reasons is not None:
+        reasons[why] += 1
     return None
 
 
@@ -108,7 +127,7 @@ async def check_domains(client, domains, dns_concurrency=300, http_concurrency=4
             return
         stats[kind] = stats.get(kind, 0) + 1
         async with http_sem:
-            results[d] = await shopify_status(client, d)
+            results[d] = await shopify_status(client, d, stats.get("reasons"))
 
     await asyncio.gather(*(one(d) for d in domains))
     return results

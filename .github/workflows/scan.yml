@@ -25,9 +25,14 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt
       - name: Tara ve rapor üret
+        timeout-minutes: 26   # süre dolsa bile sonraki adım çalışır ve o ana kadarki sonuçlar kaydedilir
+        env:
+          PYTHONUNBUFFERED: "1"
         run: python -m radar.cli run
       - name: Veriyi depoya kaydet
+        if: always()
         run: |
+          python -m radar.cli report || true   # tarama süre yüzünden yarıda kesildiyse de rapor güncellensin
           git config user.name "radar-bot"
           git config user.email "radar-bot@users.noreply.github.com"
           git add data docs

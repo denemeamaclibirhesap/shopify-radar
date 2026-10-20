@@ -120,53 +120,62 @@ async def cmd_discover(conn, args):
     print(f"{counts['open'] + counts['upcoming']} yeni Shopify mağazası bulundu")
 
 
-async def collect_store(client, conn, domain, sem, max_images):
+async def collect_store(client, conn, domain, sem, max_images, deadline=None):
     async with sem:
-        now = today()
-        home = await C.fetch_home(client, domain)
-        currency = C.parse_currency(home)
-        products = await C.fetch_products(client, domain)
-        if not products:
-            # Şifreli / henüz ürünü olmayan mağaza: yine de Türkiye işaretini (.tr, TRY, sayfa dili) güncelle
-            tr = int(currency == "TRY" or domain.endswith(".tr") or C.looks_turkish(home, []))
-            conn.execute("UPDATE stores SET last_checked=?, currency=COALESCE(?, currency), "
-                         "is_tr=MAX(is_tr, ?) WHERE domain=?", (now, currency, tr, domain))
-            return 0
-        best = await C.fetch_bestsellers(client, domain)
-        is_tr = int(currency == "TRY" or domain.endswith(".tr")
-                    or C.looks_turkish(home, [p.get("title") for p in products]))
-        conn.execute("UPDATE stores SET last_checked=?, currency=?, is_tr=?, product_count=?, status='open' "
-                     "WHERE domain=?", (now, currency, is_tr, len(products), domain))
-        have_hash = {r["pid"] for r in conn.execute(
-            "SELECT pid FROM products WHERE store=? AND phash IS NOT NULL", (domain,))}
-        for p in products:
-            conn.execute(
-                """INSERT INTO products(store,pid,title,handle,price,image_url,first_seen,last_seen)
-                   VALUES (?,?,?,?,?,?,?,?)
-                   ON CONFLICT(store,pid) DO UPDATE SET title=excluded.title,
-                   price=excluded.price, image_url=excluded.image_url, last_seen=excluded.last_seen""",
-                (domain, p["id"], p.get("title"), p.get("handle"), C.first_price(p),
-                 C.first_image(p), now, now))
-        for rank, pid in enumerate(best, 1):
-            conn.execute("INSERT OR REPLACE INTO rankings VALUES (?,?,?,?)", (now, domain, pid, rank))
-        # Önce çok satanların görsellerini hashle
-        order = best + [p["id"] for p in products if p["id"] not in set(best)]
-        by_id = {p["id"]: p for p in products}
-        hashed = 0
-        for pid in order:
-            if hashed >= max_images:
-                break
-            if pid in have_hash or pid not in by_id:
-                continue
-            url = C.first_image(by_id[pid])
-            if not url:
-                continue
-            h = await C.hash_image(client, url)
-            if h:
-                conn.execute("UPDATE products SET phash=? WHERE store=? AND pid=?", (h, domain, pid))
-                hashed += 1
-            await asyncio.sleep(0.2)
-        return len(products)
+        if deadline is not None and time.monotonic() > deadline:
+            return 0   # süre doldu: bu mağaza sonraki taramaya kalır
+        try:
+            return await _collect_store(client, conn, domain, max_images)
+        finally:
+            conn.commit()   # her mağazadan sonra kaydet: iş yarıda kesilse bile ilerleme kaybolmaz
+
+
+async def _collect_store(client, conn, domain, max_images):
+    now = today()
+    home = await C.fetch_home(client, domain)
+    currency = C.parse_currency(home)
+    products = await C.fetch_products(client, domain)
+    if not products:
+        # Şifreli / henüz ürünü olmayan mağaza: yine de Türkiye işaretini (.tr, TRY, sayfa dili) güncelle
+        tr = int(currency == "TRY" or domain.endswith(".tr") or C.looks_turkish(home, []))
+        conn.execute("UPDATE stores SET last_checked=?, currency=COALESCE(?, currency), "
+                     "is_tr=MAX(is_tr, ?) WHERE domain=?", (now, currency, tr, domain))
+        return 0
+    best = await C.fetch_bestsellers(client, domain)
+    is_tr = int(currency == "TRY" or domain.endswith(".tr")
+                or C.looks_turkish(home, [p.get("title") for p in products]))
+    conn.execute("UPDATE stores SET last_checked=?, currency=?, is_tr=?, product_count=?, status='open' "
+                 "WHERE domain=?", (now, currency, is_tr, len(products), domain))
+    have_hash = {r["pid"] for r in conn.execute(
+        "SELECT pid FROM products WHERE store=? AND phash IS NOT NULL", (domain,))}
+    for p in products:
+        conn.execute(
+            """INSERT INTO products(store,pid,title,handle,price,image_url,first_seen,last_seen)
+               VALUES (?,?,?,?,?,?,?,?)
+               ON CONFLICT(store,pid) DO UPDATE SET title=excluded.title,
+               price=excluded.price, image_url=excluded.image_url, last_seen=excluded.last_seen""",
+            (domain, p["id"], p.get("title"), p.get("handle"), C.first_price(p),
+             C.first_image(p), now, now))
+    for rank, pid in enumerate(best, 1):
+        conn.execute("INSERT OR REPLACE INTO rankings VALUES (?,?,?,?)", (now, domain, pid, rank))
+    # Önce çok satanların görsellerini hashle
+    order = best + [p["id"] for p in products if p["id"] not in set(best)]
+    by_id = {p["id"]: p for p in products}
+    hashed = 0
+    for pid in order:
+        if hashed >= max_images:
+            break
+        if pid in have_hash or pid not in by_id:
+            continue
+        url = C.first_image(by_id[pid])
+        if not url:
+            continue
+        h = await C.hash_image(client, url)
+        if h:
+            conn.execute("UPDATE products SET phash=? WHERE store=? AND pid=?", (h, domain, pid))
+            hashed += 1
+        await asyncio.sleep(0.2)
+    return len(products)
 
 
 async def cmd_collect(conn, args):
@@ -175,11 +184,13 @@ async def cmd_collect(conn, args):
         "ORDER BY is_tr DESC, last_checked IS NOT NULL, first_seen DESC LIMIT ?",
         (today(), args.max_stores)).fetchall()
     sem = asyncio.Semaphore(15)
+    deadline = time.monotonic() + args.collect_budget
     async with new_client() as client:
         res = await asyncio.gather(
-            *(collect_store(client, conn, r["domain"], sem, args.max_images) for r in rows))
+            *(collect_store(client, conn, r["domain"], sem, args.max_images, deadline) for r in rows))
     conn.commit()
-    print(f"{len(rows)} mağaza işlendi, {sum(res)} ürün görüldü")
+    print(f"{len(rows)} mağaza sırada, {sum(res)} ürün görüldü"
+          + (" (süre doldu, kalanı sonraki taramada)" if time.monotonic() > deadline else ""))
 
 
 def cmd_report(conn, args):
@@ -198,7 +209,7 @@ def main():
     d = sub.add_parser("discover")
     d.add_argument("--file")
     d.add_argument("--limit", type=int, default=150000)
-    d.add_argument("--time-budget", type=int, default=700, help="keşif için saniye")
+    d.add_argument("--time-budget", type=int, default=600, help="keşif için saniye")
     d.add_argument("--crtsh", action="store_true", help="crt.sh kaynağını da dene")
     d.add_argument("--no-majestic", action="store_true")
     d.add_argument("--no-crux", action="store_true", help="CrUX Türkiye listesini atla")
@@ -207,13 +218,14 @@ def main():
     d.add_argument("--force-majestic", action="store_true")
     c = sub.add_parser("collect")
     c.add_argument("--max-stores", type=int, default=600)
-    c.add_argument("--max-images", type=int, default=40)
+    c.add_argument("--max-images", type=int, default=25)
+    c.add_argument("--collect-budget", type=int, default=480, help="toplama için saniye")
     r = sub.add_parser("report")
     r.add_argument("--out", default="docs")
     run = sub.add_parser("run")
     run.add_argument("--file")
     run.add_argument("--limit", type=int, default=150000)
-    run.add_argument("--time-budget", type=int, default=700, help="keşif için saniye")
+    run.add_argument("--time-budget", type=int, default=600, help="keşif için saniye")
     run.add_argument("--crtsh", action="store_true", help="crt.sh kaynağını da dene")
     run.add_argument("--no-majestic", action="store_true")
     run.add_argument("--no-crux", action="store_true", help="CrUX Türkiye listesini atla")
@@ -221,7 +233,8 @@ def main():
     run.add_argument("--cc-pages", type=int, default=20, help="her taramada okunacak Common Crawl sayfası")
     run.add_argument("--force-majestic", action="store_true")
     run.add_argument("--max-stores", type=int, default=600)
-    run.add_argument("--max-images", type=int, default=40)
+    run.add_argument("--max-images", type=int, default=25)
+    run.add_argument("--collect-budget", type=int, default=480, help="toplama için saniye")
     run.add_argument("--out", default="docs")
     args = ap.parse_args()
 

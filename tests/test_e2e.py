@@ -55,7 +55,7 @@ def test_collect_and_report_end_to_end(tmp_path, monkeypatch):
     conn = connect(":memory:")
     for d in handlers:
         conn.execute("INSERT INTO stores(domain, first_seen) VALUES (?, '2026-10-19')", (d,))
-    asyncio.run(cli.cmd_collect(conn, SimpleNamespace(max_stores=10, max_images=5)))
+    asyncio.run(cli.cmd_collect(conn, SimpleNamespace(max_stores=10, max_images=5, collect_budget=60)))
 
     tr = conn.execute("SELECT is_tr, currency, product_count FROM stores WHERE domain='a.com.tr'").fetchone()
     assert (tr["is_tr"], tr["currency"], tr["product_count"]) == (1, "TRY", 3)

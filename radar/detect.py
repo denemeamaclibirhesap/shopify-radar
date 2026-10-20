@@ -41,21 +41,50 @@ async def verify_shopify(client: httpx.AsyncClient, domain: str) -> bool:
         return False
 
 
-async def check_domains(client, domains, dns_concurrency=300, http_concurrency=20):
-    """Dönüş: {domain: True/False}. True = doğrulanmış Shopify mağazası."""
+def is_password_page(r: httpx.Response) -> bool:
+    """Shopify'ın 'mağaza şifreli / yakında açılıyor' sayfası."""
+    if r.url.path.rstrip("/") == "/password":
+        return True
+    return 'action="/password"' in r.text[:300000]
+
+
+async def shopify_status(client: httpx.AsyncClient, domain: str) -> str | None:
+    """'open' (ürün listesi açık), 'upcoming' (şifreli / henüz yayında değil) ya da None."""
+    try:
+        r = await client.get(f"https://{domain}/products.json", params={"limit": 1})
+        if r.status_code == 200:
+            try:
+                data = r.json()
+                if isinstance(data, dict) and isinstance(data.get("products"), list):
+                    return "open"
+            except ValueError:
+                pass
+            if is_password_page(r):
+                return "upcoming"
+        elif r.status_code in (401, 403) and is_password_page(r):
+            return "upcoming"
+    except httpx.HTTPError:
+        pass
+    return None
+
+
+async def check_domains(client, domains, dns_concurrency=300, http_concurrency=20, stats=None):
+    """Dönüş: {domain: 'open' | 'upcoming' | None}. `stats['dns']` DNS'te Shopify görünenleri sayar."""
     resolver = make_resolver()
     dns_sem = asyncio.Semaphore(dns_concurrency)
     http_sem = asyncio.Semaphore(http_concurrency)
-    results: dict[str, bool] = {}
+    results: dict[str, str | None] = {}
+    stats = stats if stats is not None else {}
 
     async def one(d: str):
         async with dns_sem:
             ok = await dns_looks_shopify(d, resolver)
         if not ok:
-            results[d] = False
+            results[d] = None
             return
+        stats["dns"] = stats.get("dns", 0) + 1
         async with http_sem:
-            results[d] = await verify_shopify(client, d)
+            results[d] = await shopify_status(client, d)
 
     await asyncio.gather(*(one(d) for d in domains))
     return results

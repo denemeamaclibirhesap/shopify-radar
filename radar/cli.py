@@ -64,26 +64,41 @@ async def gather_domains(conn, client, args) -> list[str]:
 async def cmd_discover(conn, args):
     async with new_client() as client:
         domains = await gather_domains(conn, client, args)
-        known = {r[0] for r in conn.execute("SELECT domain FROM candidates")}
-        todo = [d for d in sources.prioritize(domains) if d not in known][: args.limit]
+        known = {r[0] for r in conn.execute("SELECT domain FROM candidates WHERE status IS NOT NULL")}
+        old = {r[0] for r in conn.execute("SELECT domain FROM candidates")}
+        todo = [d for d in sources.prioritize(domains) if d not in old][: args.limit]
+        if not args.file:
+            # Eskiden "Shopify değil" sayılanlar arasında şifreli (açılmak üzere) mağazalar kaçmış olabilir:
+            # bir kez yeniden bakılır, süre dolarsa kalanı sonraki taramaya bırakılır.
+            again = [r[0] for r in conn.execute(
+                "SELECT domain FROM candidates WHERE status IS NULL AND is_shopify=0")]
+            todo += [d for d in sources.prioritize(again) if d not in known][: max(0, args.limit - len(todo))]
         n_tr = sum(d.endswith(".tr") for d in todo)
         print(f"{len(domains)} domain okundu, {len(todo)} tanesi taranacak ({n_tr} tanesi .tr)")
-        now, found, done, start = today(), 0, 0, time.monotonic()
+        now, done, start = today(), 0, time.monotonic()
+        counts = {"open": 0, "upcoming": 0, "open_tr": 0, "upcoming_tr": 0}
+        funnel = {"dns": 0}
         stamp = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M")  # "son 24 saat" için dakika hassasiyeti
         for i in range(0, len(todo), CHUNK):
             if time.monotonic() - start > args.time_budget:
                 print(f"süre doldu: {done}/{len(todo)} taranabildi, kalanı sonraki taramaya")
                 break
-            results = await detect.check_domains(client, todo[i:i + CHUNK])
-            for d, is_shop in results.items():
-                conn.execute("INSERT OR REPLACE INTO candidates VALUES (?,?,?)", (d, now, int(is_shop)))
-                if is_shop:
-                    found += 1
-                    conn.execute("INSERT OR IGNORE INTO stores(domain, first_seen, is_tr) VALUES (?,?,?)",
-                                 (d, stamp, int(d.endswith(".tr"))))
+            results = await detect.check_domains(client, todo[i:i + CHUNK], stats=funnel)
+            for d, status in results.items():
+                conn.execute("INSERT OR REPLACE INTO candidates(domain, seen, is_shopify, status) VALUES (?,?,?,?)",
+                             (d, now, int(status == "open"), status or "none"))
+                if status:
+                    counts[status] += 1
+                    counts[status + "_tr"] += int(d.endswith(".tr"))
+                    conn.execute("INSERT OR IGNORE INTO stores(domain, first_seen, is_tr, status) VALUES (?,?,?,?)",
+                                 (d, stamp, int(d.endswith(".tr")), status))
             conn.commit()
             done += len(results)
-    print(f"{found} yeni Shopify mağazası bulundu")
+    print(f"tarama özeti: {done} alan adı bakıldı -> {funnel['dns']} tanesi DNS'te Shopify göründü -> "
+          f"{counts['open']} açık mağaza ({counts['open_tr']} .tr), "
+          f"{counts['upcoming']} açılmak üzere ({counts['upcoming_tr']} .tr), "
+          f"{funnel['dns'] - counts['open'] - counts['upcoming']} doğrulanamadı")
+    print(f"{counts['open'] + counts['upcoming']} yeni Shopify mağazası bulundu")
 
 
 async def collect_store(client, conn, domain, sem, max_images):
@@ -93,12 +108,15 @@ async def collect_store(client, conn, domain, sem, max_images):
         currency = C.parse_currency(home)
         products = await C.fetch_products(client, domain)
         if not products:
-            conn.execute("UPDATE stores SET last_checked=? WHERE domain=?", (now, domain))
+            # Şifreli / henüz ürünü olmayan mağaza: yine de Türkiye işaretini (.tr, TRY, sayfa dili) güncelle
+            tr = int(currency == "TRY" or domain.endswith(".tr") or C.looks_turkish(home, []))
+            conn.execute("UPDATE stores SET last_checked=?, currency=COALESCE(?, currency), "
+                         "is_tr=MAX(is_tr, ?) WHERE domain=?", (now, currency, tr, domain))
             return 0
         best = await C.fetch_bestsellers(client, domain)
         is_tr = int(currency == "TRY" or domain.endswith(".tr")
                     or C.looks_turkish(home, [p.get("title") for p in products]))
-        conn.execute("UPDATE stores SET last_checked=?, currency=?, is_tr=?, product_count=? "
+        conn.execute("UPDATE stores SET last_checked=?, currency=?, is_tr=?, product_count=?, status='open' "
                      "WHERE domain=?", (now, currency, is_tr, len(products), domain))
         have_hash = {r["pid"] for r in conn.execute(
             "SELECT pid FROM products WHERE store=? AND phash IS NOT NULL", (domain,))}

@@ -329,3 +329,17 @@ def test_fetch_products_skips_broken_records():
         async with client_for(handler) as c:
             return await C.fetch_products(c, "x.example")
     assert [p["id"] for p in run(go())] == [1, 2]
+
+
+def test_bozuk_yonlendirme_taramayi_durdurmaz():
+    """Aşırı uzun yönlendirme adresi (httpx.InvalidURL) tek siteyi atlatır, tarama sürer."""
+    def handler(req):
+        if req.url.host == "bozuk.example":
+            return httpx.Response(302, headers={"location": "https://x.example/" + "a" * 70000})
+        return httpx.Response(200, json={"products": []})
+
+    async def go():
+        async with client_for(handler) as c:
+            return [await detect.shopify_status(c, "bozuk.example"), await detect.shopify_status(c, "iyi.example"),
+                    await C.fetch_home(c, "bozuk.example")]
+    assert run(go()) == [None, "open", ""]

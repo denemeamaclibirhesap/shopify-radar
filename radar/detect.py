@@ -61,7 +61,7 @@ async def verify_shopify(client: httpx.AsyncClient, domain: str) -> bool:
             return False
         data = r.json()
         return isinstance(data, dict) and isinstance(data.get("products"), list)
-    except (httpx.HTTPError, ValueError):
+    except (httpx.HTTPError, httpx.InvalidURL, ValueError):
         return False
 
 
@@ -104,8 +104,10 @@ async def shopify_status(client: httpx.AsyncClient, domain: str, reasons=None) -
         why = _why(r, domain)
     except httpx.TimeoutException:
         why = "zaman-asimi"
-    except httpx.HTTPError as e:
+    except (httpx.HTTPError, httpx.InvalidURL) as e:
         why = type(e).__name__
+    except Exception as e:  # noqa: BLE001 - tek bir bozuk site tüm taramayı durdurmasın
+        why = f"beklenmeyen-{type(e).__name__}"
     if reasons is not None:
         reasons[why] += 1
     return None

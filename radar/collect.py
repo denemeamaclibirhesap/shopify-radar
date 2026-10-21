@@ -20,7 +20,7 @@ async def fetch_products(client: httpx.AsyncClient, domain: str, max_pages: int 
             r.raise_for_status()
             items = [p for p in r.json().get("products", [])
                      if isinstance(p, dict) and isinstance(p.get("id"), int)]   # bozuk kayıtları ele
-        except (httpx.HTTPError, ValueError):
+        except (httpx.HTTPError, httpx.InvalidURL, ValueError):
             break
         out.extend(items)
         if len(items) < 250:
@@ -36,7 +36,7 @@ async def fetch_bestsellers(client: httpx.AsyncClient, domain: str, limit: int =
                             params={"sort_by": "best-selling", "limit": limit})
         r.raise_for_status()
         return [p["id"] for p in r.json().get("products", [])]
-    except (httpx.HTTPError, ValueError, KeyError):
+    except (httpx.HTTPError, httpx.InvalidURL, ValueError, KeyError):
         return []
 
 
@@ -48,7 +48,7 @@ TR_TITLE_LETTERS = set("ğışİ")
 async def fetch_home(client: httpx.AsyncClient, domain: str) -> str:
     try:
         return (await client.get(f"https://{domain}/")).text
-    except httpx.HTTPError:
+    except (httpx.HTTPError, httpx.InvalidURL):
         return ""
 
 

@@ -2,3 +2,7 @@ __pycache__/
 .pytest_cache/
 *.pyc
 .venv/
+
+# veritabanı depoda değil, "data" dalında tek commit olarak tutulur (bkz. .github/workflows/scan.yml)
+data/radar.db
+data/*.db-journal

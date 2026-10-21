@@ -33,5 +33,6 @@ Komutlar ayrı da çalışır: `discover`, `collect`, `report`.
 - **Domain kaynağı:** WhoisDS'in ücretsiz listesi zaman zaman değişebilir veya indirme başarısız olabilir. Bu durumda `domains.txt` ile kendi listenizi verin (ör. Certstream/crt.sh çıktısı).
 - **Nazik tarama:** İstekler yavaş ve sınırlıdır, kimlik bildiren bir User-Agent kullanılır. Sınırları artırmadan önce mağazaların kullanım şartlarını düşünün.
 - **Kişisel veri toplamayın.** Mağaza sahibi iletişim bilgilerini toplayıp toplu mesaj atmak KVKK açısından risklidir.
-- **Veritabanı** (`data/radar.db`) repoda tutulur ve her taramada commit edilir. Çok büyürse Supabase ücretsiz katmanına taşınabilir.
+- **Veritabanı:** Her taramada `data` dalına **tek commit** olarak (eskisinin üzerine yazılarak) kaydedilir; böylece depo geçmişi şişmez. Sayfanın verisi (`docs/data.json`) ana dalda tutulur. `data` dalı yoksa ilk çalıştırmada depodaki `data/radar.db` kullanılır ve dal kendiliğinden oluşur.
+- **Kaynaklar:** WhoisDS (yeni alan adları), Majestic Million (.tr), CrUX Türkiye listesi (Türkiye'de ziyaret edilen siteler), Common Crawl (.com.tr, hata verirse atlanır). Cloudflare arkasındaki mağazalar ve şifreli (açılmak üzere) mağazalar da tespit edilir.
 - Üyelik sistemi bu sürümde yok. Sonraki adım olarak Supabase Auth ile eklenebilir.

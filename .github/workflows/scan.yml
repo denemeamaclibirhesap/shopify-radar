@@ -24,17 +24,60 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
+      - name: Veritabanını al (data dalından)
+        run: |
+          mkdir -p data
+          if git ls-remote --exit-code --heads origin data >/dev/null 2>&1; then
+            git fetch -q --depth=1 origin data
+            git show FETCH_HEAD:radar.db > data/radar.db
+            echo "veritabanı data dalından alındı: $(du -h data/radar.db | cut -f1)"
+          else
+            echo "data dalı henüz yok; depodaki veritabanı kullanılıyor (ilk çalıştırma)"
+          fi
       - name: Tara ve rapor üret
         timeout-minutes: 24   # süre dolsa bile sonraki adım çalışır ve o ana kadarki sonuçlar kaydedilir
         env:
           PYTHONUNBUFFERED: "1"
         run: python -m radar.cli run
-      - name: Veriyi depoya kaydet
+      - name: Veriyi kaydet
         if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           timeout 240 python -m radar.cli report || true   # tarama süre yüzünden yarıda kesildiyse de rapor güncellensin
           git config user.name "radar-bot"
           git config user.email "radar-bot@users.noreply.github.com"
-          git add data docs
-          git diff --staged --quiet || git commit -m "Tarama sonuçları $(date -u +%F-%H%M)"
-          git push
+          BRANCH="$GITHUB_REF_NAME"
+          STAMP="$(date -u +%F-%H%M)"
+
+          # 1) Veritabanı: ana daldayken 'data' dalına TEK commit olarak yazılır (geçmiş birikmesin, depo şişmesin).
+          PUBLISHED=0
+          if [ "$BRANCH" = "$DEFAULT_BRANCH" ] && [ -f data/radar.db ]; then
+            rm -rf /tmp/dbpub && mkdir /tmp/dbpub && cp data/radar.db /tmp/dbpub/radar.db
+            if (cd /tmp/dbpub && git init -q -b data \
+                && git -c user.name=radar-bot -c user.email=radar-bot@users.noreply.github.com add radar.db \
+                && git -c user.name=radar-bot -c user.email=radar-bot@users.noreply.github.com commit -q -m "radar.db $STAMP" \
+                && git push -q --force "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" data:data); then
+              PUBLISHED=1
+              git checkout -q -- data/radar.db 2>/dev/null || true
+              echo "veritabanı data dalına yazıldı"
+            else
+              echo "UYARI: data dalına yazılamadı; veritabanı yedek olarak bu dalda saklanacak"
+            fi
+          fi
+
+          # 2) Sayfa verisi (küçük metin dosyası) her zaman bu dala; yayımlanamayan veritabanı yedek olarak eklenir
+          git add docs
+          [ "$PUBLISHED" = "0" ] && git add -f data/radar.db || true
+          git diff --staged --quiet || git commit -q -m "Tarama sonuçları $STAMP"
+          cp docs/data.json /tmp/data.json
+          for i in 1 2 3; do
+            git push -q origin "HEAD:$BRANCH" && break
+            echo "gönderim reddedildi, dal yenilenip tekrar deneniyor ($i)"
+            git fetch -q --depth=1 origin "$BRANCH"
+            git reset -q --hard FETCH_HEAD
+            cp /tmp/data.json docs/data.json
+            git add docs
+            git diff --staged --quiet || git commit -q -m "Tarama sonuçları $STAMP"
+          done

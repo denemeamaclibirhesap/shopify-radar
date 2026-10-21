@@ -212,3 +212,120 @@ def test_known_brand_detection():
     for d in ("nike-outlet.shop", "benimbutigim.com", "yenimagaza.com.tr", "sneakers.nike-fan.com"):
         assert not brands.is_known_brand(d), d
     assert brands.is_known_brand("kucukdukkan.com", {"kucukdukkan.com"})
+
+
+def test_shopify_status_open_upcoming_none():
+    def handler(req):
+        host = req.url.host
+        if host == "open.example":
+            return httpx.Response(200, json={"products": []})
+        if host == "soon.example":
+            if req.url.path == "/password":
+                return httpx.Response(200, text='<form action="/password" method="post">Opening soon</form>')
+            return httpx.Response(302, headers={"location": "https://soon.example/password"})
+        if host == "html.example":
+            return httpx.Response(200, text="<html>merhaba</html>")
+        return httpx.Response(404)
+
+    async def go():
+        async with client_for(handler) as c:
+            return [await detect.shopify_status(c, h)
+                    for h in ("open.example", "soon.example", "html.example", "none.example")]
+    assert run(go()) == ["open", "upcoming", None, None]
+
+
+def test_discover_records_upcoming_and_backfills(monkeypatch, tmp_path):
+    from types import SimpleNamespace
+    from radar import cli
+    conn = connect(":memory:")
+    # Eskiden "Shopify değil" diye işaretlenmiş (status NULL) bir aday: yeniden bakılmalı
+    conn.execute("INSERT INTO candidates(domain, seen, is_shopify) VALUES ('eski.com.tr', '2026-10-01', 0)")
+
+    async def fake_check(client, domains, stats=None, **kw):
+        stats["shopify"] = len(domains)
+        return {d: ("upcoming" if d == "eski.com.tr" else "open" if d == "yeni.com" else None) for d in domains}
+    monkeypatch.setattr(cli.detect, "check_domains", fake_check)
+    f = tmp_path / "d.txt"; f.write_text("yeni.com\n")
+    args = SimpleNamespace(file=str(f), limit=100, time_budget=60, no_majestic=True, force_majestic=False, crtsh=False, no_cc=True, no_crux=True, cc_pages=1)
+    run(cli.cmd_discover(conn, args))
+    assert conn.execute("SELECT status FROM stores WHERE domain='yeni.com'").fetchone()[0] == "open"
+    assert conn.execute("SELECT COUNT(*) FROM stores WHERE domain='eski.com.tr'").fetchone()[0] == 0  # --file: geri tarama yok
+    args.file = None
+    monkeypatch.setattr(cli, "gather_domains", lambda *a, **k: _async([]))
+    run(cli.cmd_discover(conn, args))
+    row = conn.execute("SELECT status, is_tr FROM stores WHERE domain='eski.com.tr'").fetchone()
+    assert (row["status"], row["is_tr"]) == ("upcoming", 1)
+    assert conn.execute("SELECT status FROM candidates WHERE domain='eski.com.tr'").fetchone()[0] == "upcoming"
+
+
+async def _async(v):
+    return v
+
+
+def test_fetch_commoncrawl_tr_pages_and_cursor():
+    import json as _json
+
+    def handler(req):
+        if req.url.path.endswith("collinfo.json"):
+            return httpx.Response(200, json=[{"id": "CC-MAIN-2026-39"}])
+        if req.url.params.get("showNumPages"):
+            return httpx.Response(200, json={"pages": 3})
+        page = int(req.url.params["page"])
+        rows = {0: ["https://www.butik.com.tr/a", "https://butik.com.tr/b", "https://shop.deneme.com.tr/"],
+                1: ["https://moda.com.tr/x"], 2: ["https://yok.example.com/x"]}[page]
+        return httpx.Response(200, text="\n".join(_json.dumps({"url": u}) for u in rows))
+
+    async def go(cursor, pages):
+        async with client_for(handler) as c:
+            return await sources.fetch_commoncrawl_tr(c, cursor, pages=pages, delay=0)
+    domains, cur = run(go(None, 1))
+    assert domains == ["butik.com.tr", "deneme.com.tr"] or set(domains) == {"butik.com.tr", "deneme.com.tr"}
+    assert cur["page"] == 1
+    domains, cur = run(go(cur, 5))           # kalınan yerden devam, dizin sonunda durur
+    assert domains == ["moda.com.tr"] and cur["page"] == 3
+
+
+def test_dns_class_shopify_cloudflare_none():
+    class Rd:
+        def __init__(self, a): self.address = a
+
+    class Ans(list):
+        canonical_name = "x.example."
+
+    class FakeResolver:
+        async def resolve(self, name, kind):
+            table = {"s.example": "23.227.38.65", "cf.example": "104.21.5.5", "www.cf2.example": "172.67.1.1",
+                     "other.example": "93.184.216.34"}
+            if name in table:
+                return Ans([Rd(table[name])])
+            raise OSError("nxdomain")
+    r = FakeResolver()
+    got = [run(detect.dns_class(d, r)) for d in ("s.example", "cf.example", "cf2.example", "other.example", "yok.example")]
+    assert got == ["shopify", "cloudflare", "cloudflare", None, None]
+
+
+def test_registrable_and_crux(monkeypatch):
+    import gzip
+    assert sources.registrable("www.magaza.com") == "magaza.com"
+    assert sources.registrable("shop.example.co.uk") == "example.co.uk"
+    assert sources.registrable("a.b.com.tr") == "b.com.tr"
+    csv = "origin,rank\nhttps://www.butik.com,1000\nhttps://butik.com,10000\nhttps://x.y.com.tr,100000\nhttp://localhost,1000\n"
+    blob = gzip.compress(csv.encode())
+
+    def handler(req):
+        return httpx.Response(200, content=blob) if req.url.path.endswith(".csv.gz") else httpx.Response(404)
+
+    async def go():
+        async with client_for(handler) as c:
+            return await sources.fetch_crux(c)
+    assert run(go()) == ["butik.com", "y.com.tr"]
+
+
+def test_fetch_products_skips_broken_records():
+    def handler(req):
+        return httpx.Response(200, json={"products": [{"id": 1}, {"title": "kimliksiz"}, "bozuk", {"id": 2}]})
+
+    async def go():
+        async with client_for(handler) as c:
+            return await C.fetch_products(c, "x.example")
+    assert [p["id"] for p in run(go())] == [1, 2]

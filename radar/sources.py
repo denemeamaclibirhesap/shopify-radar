@@ -9,6 +9,7 @@ import asyncio
 import base64
 import datetime as dt
 import io
+import json
 import re
 import time
 import zipfile
@@ -138,6 +139,109 @@ async def fetch_crtsh(client: httpx.AsyncClient, patterns=CRT_PATTERNS, days: in
     domains = parse_domains("\n".join(dict.fromkeys(found)))
     print(f"crt.sh: {ok} sorgu başarılı, {failed} başarısız, {len(domains)} .tr alan adı")
     return domains
+
+
+CRUX_URL = ("https://raw.githubusercontent.com/InternetHealthReport/crux-top-lists-country/main/"
+            "data/country/{cc}/{ym}.csv.gz")
+SECOND_LEVEL_CC = {"co", "com", "org", "net", "gov", "ac", "edu"}
+
+
+def registrable(host: str) -> str:
+    """www.shop.example.com -> example.com; x.example.co.uk -> example.co.uk; x.y.com.tr -> y.com.tr."""
+    host = host.lower().strip(".")
+    if host.endswith(".tr"):
+        return registrable_tr(host)
+    parts = host.split(".")
+    if host.startswith("www."):
+        parts = parts[1:]
+    if len(parts) >= 3 and len(parts[-1]) == 2 and parts[-2] in SECOND_LEVEL_CC:
+        return ".".join(parts[-3:])
+    return ".".join(parts[-2:])
+
+
+async def fetch_crux(client: httpx.AsyncClient, country: str = "tr") -> list[str]:
+    """CrUX (Chrome kullanıcı verisi) ülke listesi: o ülkede en çok ziyaret edilen ~1M site.
+
+    Kaynak: InternetHealthReport/crux-top-lists-country (aylık, ücretsiz). Son 4 ayı sırayla dener.
+    """
+    import gzip
+    from urllib.parse import urlsplit
+    today = dt.date.today()
+    for back in range(4):
+        y, m = today.year, today.month - back
+        while m <= 0:
+            y, m = y - 1, m + 12
+        r = await client.get(CRUX_URL.format(cc=country, ym=f"{y}{m:02d}"), timeout=120)
+        if r.status_code != 200:
+            continue
+        out: dict[str, None] = {}
+        for line in gzip.decompress(r.content).decode("utf-8", "ignore").splitlines()[1:]:
+            origin = line.rsplit(",", 1)[0]
+            host = urlsplit(origin).hostname
+            if host and "." in host:
+                out[registrable(host)] = None
+        return parse_domains("\n".join(out))
+    return []
+
+
+CC_COLLINFO = "https://index.commoncrawl.org/collinfo.json"
+
+
+async def fetch_commoncrawl_tr(client: httpx.AsyncClient, cursor: dict | None, pages: int = 20,
+                               suffix: str = "com.tr", delay: float = 1.0) -> tuple[list[str], dict]:
+    """Common Crawl dizininden `suffix` altındaki sitelerin alan adları (ücretsiz, nonprofit arşiv).
+
+    Dizin SURT sırasıyla sayfalanır; her çalışmada `pages` sayfa okunur ve kalınan yer `cursor`
+    olarak döner (yeni dizin çıkarsa baştan başlar). Sayfa hata verirse orada durulur, sonraki
+    çalışmada aynı sayfadan devam edilir. Dönüş: (alan adları, yeni cursor).
+    """
+    from urllib.parse import urlsplit
+    cursor = cursor or {}
+    out: list[str] = []
+    try:
+        r = await client.get(CC_COLLINFO, timeout=30)
+        r.raise_for_status()
+        index_id = r.json()[0]["id"]
+        api = f"https://index.commoncrawl.org/{index_id}-index"
+        r = await client.get(api, timeout=60, params={"url": suffix, "matchType": "domain",
+                                                      "showNumPages": "true", "output": "json"})
+        r.raise_for_status()
+        total = int(r.json()["pages"])
+    except (httpx.HTTPError, ValueError, KeyError, IndexError) as e:
+        print(f"Common Crawl atlandı: {type(e).__name__}")
+        return [], cursor
+    page = cursor.get("page", 0) if cursor.get("index") == index_id and cursor.get("suffix") == suffix else 0
+    if page >= total:
+        page = 0
+    start_page, read = page, 0
+    while read < pages and page < total:
+        text = None
+        for attempt in range(2):
+            try:
+                r = await client.get(api, timeout=90, params={"url": suffix, "matchType": "domain",
+                                                              "output": "json", "fl": "url", "page": page})
+                r.raise_for_status()
+                text = r.text
+                break
+            except httpx.HTTPError:
+                await asyncio.sleep(delay * 3)
+        if text is None:
+            print(f"Common Crawl sayfa {page} okunamadı, sonraki taramada denenecek")
+            break
+        hosts = set()
+        for line in text.splitlines():
+            try:
+                host = urlsplit(json.loads(line)["url"]).hostname
+            except (ValueError, KeyError, TypeError):
+                continue
+            if host and host.endswith(".tr"):
+                hosts.add(registrable_tr(host))
+        out += hosts
+        page += 1
+        read += 1
+        await asyncio.sleep(delay)
+    print(f"Common Crawl: sayfa {start_page}-{page - 1}/{total}, {len(set(out))} {suffix} alan adı")
+    return parse_domains("\n".join(dict.fromkeys(out))), {"index": index_id, "suffix": suffix, "page": page}
 
 
 def prioritize(domains: list[str]) -> list[str]:

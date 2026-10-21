@@ -186,11 +186,11 @@
   <div class="hero">
     <div class="eyebrow"><span class="dot" aria-hidden="true"></span><span id="eyebrow">Veri yükleniyor…</span></div>
     <h1>Yeni açılan mağazaları <em>ilk sen</em> gör.</h1>
-    <p class="lead">Her gün yeni açılan Shopify mağazalarını bulur, Türkiye'dekileri öne çıkarır ve hangi ürünlerin yükselişte olduğunu izler.</p>
+    <p class="lead">Shopify mağazalarını her gün keşfeder, Türkiye'dekileri öne çıkarır ve hangi ürünlerin yükselişte olduğunu izler.</p>
 
     <div class="stats" id="stats" aria-live="polite">
-      <div class="stat"><div class="stat-num" data-k="new_24h">–</div><div class="stat-label">Son 24 saatte yeni mağaza</div></div>
-      <div class="stat"><div class="stat-num" data-k="new_7d">–</div><div class="stat-label">Son 7 günde yeni mağaza</div></div>
+      <div class="stat"><div class="stat-num" data-k="new_24h">–</div><div class="stat-label">Son 24 saatte keşfedilen mağaza</div></div>
+      <div class="stat"><div class="stat-num" data-k="new_7d">–</div><div class="stat-label">Son 7 günde keşfedilen mağaza</div></div>
       <div class="stat"><div class="stat-num" data-k="open">–</div><div class="stat-label">Açık mağaza</div></div>
       <div class="stat"><div class="stat-num" data-k="upcoming">–</div><div class="stat-label">Açılmak üzere</div><div class="stat-hint">şifreli, henüz yayında değil</div></div>
       <div class="stat hl"><div class="stat-num" data-k="tr_open">–</div><div class="stat-label">Türkiye'de açık mağaza</div></div>
@@ -205,7 +205,7 @@
 <div class="toolbar-wrap">
   <div class="wrap toolbar" role="search">
     <div class="tabs" role="tablist" aria-label="Mağaza türü">
-      <button class="tab" id="tab-new" role="tab" type="button" aria-selected="true">Yeni mağazalar<span id="n-new"></span></button>
+      <button class="tab" id="tab-new" role="tab" type="button" aria-selected="true">Mağazalar<span id="n-new"></span></button>
       <button class="tab" id="tab-upcoming" role="tab" type="button" aria-selected="false">Açılmak üzere<span id="n-upcoming"></span></button>
       <button class="tab" id="tab-brand" role="tab" type="button" aria-selected="false">Bilinen markalar<span id="n-brand"></span></button>
     </div>
@@ -270,7 +270,7 @@
   var data = null, brandSet = {};
   var TEXT = {
     new: ["Yeni keşfedilen mağazalar", "Radarın en son bulduğu bağımsız mağazalar. Türkiye odaklı olanlar kırmızı rozetle işaretlenir. Karta tıklayınca mağaza yeni sekmede açılır."],
-    upcoming: ["Açılmak üzere olan mağazalar", "Mağazası kurulmuş ama henüz şifreli olan, yani yayına girmeyi bekleyen mağazalar. Ürünleri açıldığında 'Yeni mağazalar' sekmesine geçer. Karta tıklayınca mağaza yeni sekmede açılır."],
+    upcoming: ["Açılmak üzere olan mağazalar", "Mağazası kurulmuş ama henüz şifreli olan, yani yayına girmeyi bekleyen mağazalar. Ürünleri açıldığında 'Mağazalar' sekmesine geçer. Karta tıklayınca mağaza yeni sekmede açılır."],
     brand: ["Bilinen markalar", "Zaten tanınan markaların Shopify mağazaları. Yeni ve bağımsız mağazalardan ayrı tutulur. Karta tıklayınca mağaza yeni sekmede açılır."]
   };
   function isBrand(domain) { return !!brandSet[domain]; }

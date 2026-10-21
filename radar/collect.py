@@ -18,7 +18,8 @@ async def fetch_products(client: httpx.AsyncClient, domain: str, max_pages: int 
             r = await client.get(f"https://{domain}/products.json",
                                  params={"limit": 250, "page": page})
             r.raise_for_status()
-            items = r.json().get("products", [])
+            items = [p for p in r.json().get("products", [])
+                     if isinstance(p, dict) and isinstance(p.get("id"), int)]   # bozuk kayıtları ele
         except (httpx.HTTPError, ValueError):
             break
         out.extend(items)

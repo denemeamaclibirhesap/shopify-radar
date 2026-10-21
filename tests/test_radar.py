@@ -319,3 +319,13 @@ def test_registrable_and_crux(monkeypatch):
         async with client_for(handler) as c:
             return await sources.fetch_crux(c)
     assert run(go()) == ["butik.com", "y.com.tr"]
+
+
+def test_fetch_products_skips_broken_records():
+    def handler(req):
+        return httpx.Response(200, json={"products": [{"id": 1}, {"title": "kimliksiz"}, "bozuk", {"id": 2}]})
+
+    async def go():
+        async with client_for(handler) as c:
+            return await C.fetch_products(c, "x.example")
+    assert [p["id"] for p in run(go())] == [1, 2]

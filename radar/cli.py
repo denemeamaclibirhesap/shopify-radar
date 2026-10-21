@@ -126,6 +126,9 @@ async def collect_store(client, conn, domain, sem, max_images, deadline=None):
             return 0   # süre doldu: bu mağaza sonraki taramaya kalır
         try:
             return await _collect_store(client, conn, domain, max_images)
+        except Exception as e:  # noqa: BLE001 - tek bir mağazadaki hata tüm taramayı durdurmasın
+            print(f"{domain} atlandı: {type(e).__name__}: {e}")
+            return 0
         finally:
             conn.commit()   # her mağazadan sonra kaydet: iş yarıda kesilse bile ilerleme kaybolmaz
 
